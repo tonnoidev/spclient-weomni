@@ -1,0 +1,13 @@
+{
+    "brandId": "1100001",
+    "branchId": "00006",
+    "terminalId": "69000006",
+    "transaction": {
+        "traceId": "000019",
+        "batchId": "000075",
+        "transactionReferenceId": "2018041014443644",
+        "transactionDate": "2018-04-10T14:44:36.942"
+    },
+    "trueYouId": "101110000100006",
+    "rewardCode": "TY75270373"
+}
