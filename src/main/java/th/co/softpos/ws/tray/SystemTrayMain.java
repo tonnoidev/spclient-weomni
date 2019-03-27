@@ -25,7 +25,7 @@ public class SystemTrayMain {
         Image image = Toolkit.getDefaultToolkit().getImage(pathImg);
 
         PopupMenu trayPopupMenu = new PopupMenu();
-        MenuItem action = new MenuItem("Action");
+        MenuItem action = new MenuItem("Open");
         action.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -34,6 +34,7 @@ public class SystemTrayMain {
             }
         });
         trayPopupMenu.add(action);
+        trayPopupMenu.addSeparator();
         
         MenuItem close = new MenuItem("Close");
         close.addActionListener(new ActionListener() {

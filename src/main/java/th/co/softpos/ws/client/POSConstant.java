@@ -2,9 +2,9 @@ package th.co.softpos.ws.client;
 
 public class POSConstant {
 
-    public static String CLIENT_ID = "aYYU357MyCYhObJ9OC1PC5TVbemloozG";
-    public static String CLIENT_SECRET = "r0Zr3u4JZPrUjaa4";    
-    public static final String ACCESS_TOKEN = "oH1KpGj6RDylZgb62vYfVi47LUYG";
+    public static String CLIENT_ID;
+    public static String CLIENT_SECRET;
+    public static String ACCESS_TOKEN;
 
     // services trigger
     // List all Activate TRIGGER

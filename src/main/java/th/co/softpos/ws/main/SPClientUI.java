@@ -1,12 +1,21 @@
 package th.co.softpos.ws.main;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
+import th.co.softpos.ws.client.POSConstant;
 import th.co.softpos.ws.client.WSConstants;
+import th.co.softpos.ws.model.AccessToken;
 
 public class SPClientUI extends javax.swing.JDialog {
 
@@ -30,6 +39,7 @@ public class SPClientUI extends javax.swing.JDialog {
         initComponents();
 
         initCombo();
+        loadToken();
     }
 
     @SuppressWarnings("unchecked")
@@ -51,6 +61,8 @@ public class SPClientUI extends javax.swing.JDialog {
         txtApiRequest = new javax.swing.JTextField();
         rdGet = new javax.swing.JRadioButton();
         rdPost = new javax.swing.JRadioButton();
+        btnGenerateToken = new javax.swing.JButton();
+        txtToken = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Service Management");
@@ -118,7 +130,7 @@ public class SPClientUI extends javax.swing.JDialog {
                         .addComponent(jLabel3)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
                     .addComponent(jScrollPane4)))
         );
 
@@ -135,6 +147,17 @@ public class SPClientUI extends javax.swing.JDialog {
         rdPost.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         rdPost.setText("POST");
 
+        btnGenerateToken.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        btnGenerateToken.setText("Generate Token");
+        btnGenerateToken.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGenerateTokenActionPerformed(evt);
+            }
+        });
+
+        txtToken.setEditable(false);
+        txtToken.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -147,6 +170,7 @@ public class SPClientUI extends javax.swing.JDialog {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtApiRequest)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(cbServiceType, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -154,7 +178,10 @@ public class SPClientUI extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(rdPost)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(txtApiRequest))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnGenerateToken)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtToken)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -162,14 +189,18 @@ public class SPClientUI extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGenerateToken, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtToken, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(cbServiceType, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rdGet)
                     .addComponent(rdPost))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtApiRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -185,7 +216,15 @@ public class SPClientUI extends javax.swing.JDialog {
         requestAction();
     }//GEN-LAST:event_btnRequestActionPerformed
 
+    private void btnGenerateTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateTokenActionPerformed
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to generate new token again !");
+        if (confirm == JOptionPane.YES_OPTION) {
+            generateToken();
+        }
+    }//GEN-LAST:event_btnGenerateTokenActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGenerateToken;
     private javax.swing.JButton btnRequest;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbServiceType;
@@ -201,6 +240,7 @@ public class SPClientUI extends javax.swing.JDialog {
     private javax.swing.JTextField txtApiRequest;
     private javax.swing.JTextArea txtRequest;
     private javax.swing.JTextArea txtResponse;
+    private javax.swing.JTextField txtToken;
     // End of variables declaration//GEN-END:variables
 
     private void initCombo() {
@@ -244,7 +284,7 @@ public class SPClientUI extends javax.swing.JDialog {
 
     private void requestAction() {
         if (inValidRequest()) {
-            JOptionPane.showMessageDialog(this, "กรุณาระบุข้อมูลใน {} ให้ครบถ้วน !");
+            JOptionPane.showMessageDialog(this, "กรุณาระบุข้อมูลใน { } ให้ครบถ้วน !");
             return;
         }
         String data;
@@ -273,13 +313,6 @@ public class SPClientUI extends javax.swing.JDialog {
         return temp;
     }
 
-    public static void main(String[] args) {
-//        String json = "{\"brandId\":\"1100001\",\"branchId\":\"00132\",\"terminalId\":\"69000132\",\"serialNumber\":\"869826022379141\",\"activationCode\":\"99999999\"}";
-        String json = "{\"id\":\"001\",\"name\":\"nathee\",\"address\":{\"no\":\"292/1\",\"province\":\"uthai thani\"}}";
-        String data = formatJson(json);
-        System.out.println(data);
-    }
-
     private String loadJsonSampleFile(String apiName) {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("json/" + apiName + "_req.json").getFile());
@@ -300,4 +333,66 @@ public class SPClientUI extends javax.swing.JDialog {
     private boolean inValidRequest() {
         return txtApiRequest.getText().contains("{");
     }
+
+    private void generateToken() {
+        String tokenResponse = TaskPost.getToken("", "");
+        System.out.println(tokenResponse);
+
+        Gson gson = new GsonBuilder().create();
+        AccessToken tokenBean = gson.fromJson(tokenResponse, AccessToken.class);
+
+        String token = tokenBean.getAccessToken();
+        POSConstant.ACCESS_TOKEN = token;
+
+        txtToken.setText(token);
+
+        writeToken();
+    }
+
+    private void loadToken() {
+        Properties prop = new Properties();
+        InputStream input = null;
+        ClassLoader classLoader = getClass().getClassLoader();
+        try {
+            input = new FileInputStream(classLoader.getResource("config.properties").getFile());
+            prop.load(input);
+
+            POSConstant.CLIENT_ID = prop.getProperty("CLIENT_ID");
+            POSConstant.CLIENT_SECRET = prop.getProperty("CLIENT_SECRET");
+            POSConstant.ACCESS_TOKEN = prop.getProperty("ACCESS_TOKEN");
+
+            txtToken.setText(POSConstant.ACCESS_TOKEN);
+        } catch (IOException e) {
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+
+    }
+
+    private void writeToken() {
+        Properties prop = new Properties();
+        OutputStream output = null;
+        ClassLoader classLoader = getClass().getClassLoader();
+        try {
+            output = new FileOutputStream(classLoader.getResource("config.properties").getFile());
+            prop.setProperty("CLIENT_ID", POSConstant.CLIENT_ID);
+            prop.setProperty("CLIENT_SECRET", POSConstant.CLIENT_SECRET);
+            prop.setProperty("ACCESS_TOKEN", txtToken.getText());
+            prop.store(output, null);
+        } catch (IOException e) {
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+
 }

@@ -1,5 +1,7 @@
 package th.co.softpos.ws.main;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,8 +17,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import th.co.softpos.ws.client.POSConstant;
 import th.co.softpos.ws.client.WSConstants;
+import th.co.softpos.ws.model.AccessToken;
 
 public class TaskPost {
+
+    public static void main(String[] args) {
+        String res = "{\"refresh_token_expires_in\":\"0\",\"api_product_list\":\"[pos-partner-services]\",\"api_product_list_json\":[\"pos-partner-services\"],\"organization_name\":\"weomni\",\"developer.email\":\"md@softpos.co.th\",\"token_type\":\"Bearer\",\"issued_at\":\"1553655413572\",\"client_id\":\"aYYU357MyCYhObJ9OC1PC5TVbemloozG\",\"access_token\":\"WKYZWUUUugz3tYEnDfbENttRFfpk\",\"application_name\":\"427bcc7f-5853-4281-9e1b-af34a1714d02\",\"scope\":\"\",\"expires_in\":\"0\",\"refresh_count\":\"0\",\"status\":\"approved\"}";
+        Gson gson = new GsonBuilder().create();
+        AccessToken tokenBean = gson.fromJson(res, AccessToken.class);
+        System.out.println(tokenBean.getAccessToken());
+    }
 
     private static String getStreamStr(InputStream is) {
         return new Scanner(is, "UTF-8").useDelimiter("\\Z").next();
@@ -46,7 +56,8 @@ public class TaskPost {
                 InputStream inStream = con.getInputStream();
                 json = getStreamStr(inStream); // input stream to string
             } else {
-                json = "" + status + " " + msg;
+                json = "     status:" + status + " , msg:" + msg;
+                json += getStreamStr(con.getErrorStream());
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -87,7 +98,9 @@ public class TaskPost {
 
                 json = response.toString();
             } else {
-                json = "" + status + " " + msg;
+                json = "     status:" + status + " , msg:" + msg;
+                json += getStreamStr(con.getErrorStream());
+
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -96,14 +109,20 @@ public class TaskPost {
         return json;
     }
 
-    public static String getToken() {
+    public static String getToken(String clientId, String clientSecret) {
         Logger logger = Logger.getLogger("SoftLog");
         String tokenResponse = null;
 
         // request token
         try {
             String CLIENT_ID = POSConstant.CLIENT_ID;
+            if (!"".equals(clientId)) {
+                CLIENT_ID = clientId;
+            }
             String CLIENT_SECRET = POSConstant.CLIENT_SECRET;
+            if (!"".equals(clientSecret)) {
+                CLIENT_SECRET = clientSecret;
+            }
             String dtype = "grant_type=client_credentials";
             URL url = new URL(WSConstants.URL_AUTH);
 
