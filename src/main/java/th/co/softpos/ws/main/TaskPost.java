@@ -1,7 +1,5 @@
 package th.co.softpos.ws.main;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,16 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import th.co.softpos.ws.client.POSConstant;
 import th.co.softpos.ws.client.WSConstants;
-import th.co.softpos.ws.model.AccessToken;
 
 public class TaskPost {
-
-    public static void main(String[] args) {
-        String res = "{\"refresh_token_expires_in\":\"0\",\"api_product_list\":\"[pos-partner-services]\",\"api_product_list_json\":[\"pos-partner-services\"],\"organization_name\":\"weomni\",\"developer.email\":\"md@softpos.co.th\",\"token_type\":\"Bearer\",\"issued_at\":\"1553655413572\",\"client_id\":\"aYYU357MyCYhObJ9OC1PC5TVbemloozG\",\"access_token\":\"WKYZWUUUugz3tYEnDfbENttRFfpk\",\"application_name\":\"427bcc7f-5853-4281-9e1b-af34a1714d02\",\"scope\":\"\",\"expires_in\":\"0\",\"refresh_count\":\"0\",\"status\":\"approved\"}";
-        Gson gson = new GsonBuilder().create();
-        AccessToken tokenBean = gson.fromJson(res, AccessToken.class);
-        System.out.println(tokenBean.getAccessToken());
-    }
 
     private static String getStreamStr(InputStream is) {
         return new Scanner(is, "UTF-8").useDelimiter("\\Z").next();
@@ -42,13 +32,14 @@ public class TaskPost {
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json");
             con.setRequestProperty("charset", "utf-8");
-            con.setConnectTimeout(5000);
+            con.setRequestProperty("Authorization", "Bearer " + POSConstant.ACCESS_TOKEN);
+            con.setConnectTimeout(POSConstant.TIMEOUT);
             con.connect();
 
             int status = con.getResponseCode();
             String msg = con.getResponseMessage();
 
-            if (status == 200) {
+            if (status == HttpURLConnection.HTTP_OK) {
                 if (WSConstants.API_POS_HEALTH.equals(apiUri)) {
                     json = "Service is available :)";
                     return json;
@@ -76,7 +67,7 @@ public class TaskPost {
             con.setRequestProperty("Content-Type", "application/json");
             con.setRequestProperty("charset", "utf-8");
             con.setRequestProperty("Authorization", "Bearer " + POSConstant.ACCESS_TOKEN);
-            con.setConnectTimeout(5000);
+            con.setConnectTimeout(POSConstant.TIMEOUT);
 
             try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
                 wr.writeBytes(jsonData);
@@ -86,7 +77,7 @@ public class TaskPost {
             int status = con.getResponseCode();
             String msg = con.getResponseMessage();
 
-            if (status == 200) {
+            if (status == HttpURLConnection.HTTP_OK) {
                 StringBuilder response;
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
                     String inputLine;
@@ -134,7 +125,7 @@ public class TaskPost {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Authorization", authHeader);
-            con.setConnectTimeout(60000);
+            con.setConnectTimeout(POSConstant.TIMEOUT);
             con.setDoInput(true);
             con.setDoOutput(true);
 

@@ -2,16 +2,19 @@ package th.co.softpos.ws.main;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import th.co.softpos.ws.client.POSConstant;
 import th.co.softpos.ws.client.WSConstants;
@@ -38,6 +41,14 @@ public class SPClientUI extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
 
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(classLoader.getResource("services_tray.png").getFile());
+            Image image = ImageIO.read(file);
+            this.setIconImage(image);
+        } catch (IOException e) {
+        }
+
         initCombo();
         loadToken();
     }
@@ -58,17 +69,18 @@ public class SPClientUI extends javax.swing.JDialog {
         txtResponse = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtApiRequest = new javax.swing.JTextField();
         rdGet = new javax.swing.JRadioButton();
         rdPost = new javax.swing.JRadioButton();
         btnGenerateToken = new javax.swing.JButton();
         txtToken = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtApiRequest = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Service Management");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel1.setText("เลือก Services");
+        jLabel1.setText("Get Services");
 
         cbServiceType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         cbServiceType.addItemListener(new java.awt.event.ItemListener() {
@@ -134,9 +146,7 @@ public class SPClientUI extends javax.swing.JDialog {
                     .addComponent(jScrollPane4)))
         );
 
-        jTabbedPane1.addTab("Information Client", jPanel1);
-
-        txtApiRequest.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jTabbedPane1.addTab("Client Information", jPanel1);
 
         buttonGroup1.add(rdGet);
         rdGet.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -158,6 +168,11 @@ public class SPClientUI extends javax.swing.JDialog {
         txtToken.setEditable(false);
         txtToken.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
+        txtApiRequest.setColumns(20);
+        txtApiRequest.setLineWrap(true);
+        txtApiRequest.setRows(5);
+        jScrollPane1.setViewportView(txtApiRequest);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -170,7 +185,10 @@ public class SPClientUI extends javax.swing.JDialog {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtApiRequest)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnGenerateToken)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtToken))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(cbServiceType, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -178,10 +196,7 @@ public class SPClientUI extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(rdPost)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnGenerateToken)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtToken)))
+                            .addComponent(jScrollPane1))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -198,8 +213,8 @@ public class SPClientUI extends javax.swing.JDialog {
                     .addComponent(rdGet)
                     .addComponent(rdPost))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtApiRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -232,12 +247,13 @@ public class SPClientUI extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JRadioButton rdGet;
     private javax.swing.JRadioButton rdPost;
-    private javax.swing.JTextField txtApiRequest;
+    private javax.swing.JTextArea txtApiRequest;
     private javax.swing.JTextArea txtRequest;
     private javax.swing.JTextArea txtResponse;
     private javax.swing.JTextField txtToken;
