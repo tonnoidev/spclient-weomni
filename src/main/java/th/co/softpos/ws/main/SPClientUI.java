@@ -1,8 +1,29 @@
 package th.co.softpos.ws.main;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import javax.swing.JOptionPane;
 import th.co.softpos.ws.client.WSConstants;
 
 public class SPClientUI extends javax.swing.JDialog {
+
+    private final Map map = new HashMap();
+    private final String[] API = new String[]{
+        "API_ACTIVATE",
+        "API_PRIVILEGE_REDEEM_CAMPAIGN",
+        "API_PRIVILEGE_REDEEM_CODE",
+        "API_PRIVILEGE_EARN_POINT",
+        "API_PRIVILEGE_TRUE_YOU_CARD",
+        "API_PRIVILEGE_EARN_POINT_VOID",
+        "API_PRIVILEGE_BURN_POINT_VOID",
+        "API_CAMPAIGN",
+        "API_PAYMENTS",
+        "API_PAYMENTS_VOID",
+        "API_POS_HEALTH"
+    };
 
     public SPClientUI(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -164,23 +185,6 @@ public class SPClientUI extends javax.swing.JDialog {
         requestAction();
     }//GEN-LAST:event_btnRequestActionPerformed
 
-    public static void main(String args[]) {
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                SPClientUI dialog = new SPClientUI(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRequest;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -200,26 +204,100 @@ public class SPClientUI extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void initCombo() {
-        cbServiceType.addItem("");
-        cbServiceType.addItem("API_ACTIVATE");
+        map.put(API[0], WSConstants.API_ACTIVATE);
+        map.put(API[1], WSConstants.API_PRIVILEGE_REDEEM_CAMPAIGN);
+        map.put(API[2], WSConstants.API_PRIVILEGE_REDEEM_CODE);
+        map.put(API[3], WSConstants.API_PRIVILEGE_EARN_POINT);
+        map.put(API[4], WSConstants.API_PRIVILEGE_TRUE_YOU_CARD);
+        map.put(API[5], WSConstants.API_PRIVILEGE_EARN_POINT_VOID);
+        map.put(API[6], WSConstants.API_PRIVILEGE_BURN_POINT_VOID);
+        map.put(API[7], WSConstants.API_CAMPAIGN);
+        map.put(API[8], WSConstants.API_PAYMENTS);
+        map.put(API[9], WSConstants.API_PAYMENTS_VOID);
+        map.put(API[10], WSConstants.API_POS_HEALTH);
+
+        for (String apiUri : API) {
+            cbServiceType.addItem(apiUri);
+        }
     }
 
     private void actionCombo() {
-        if (cbServiceType.getSelectedIndex() == 1) {
-            txtApiRequest.setText(WSConstants.API_ACTIVATE);
-            txtRequest.setText("{\n"
-                    + "  \"activationCode\": \"99999999\",\n"
-                    + "  \"imei\": \"869826022379141\",\n"
-                    + "  \"latitude\": 13.7645001,\n"
-                    + "  \"longitude\": 100.5679174,\n"
-                    + "  \"password\": \"2222\",\n"
-                    + "  \"external\": false\n"
-                    + "}");
-            rdPost.setSelected(true);
+        txtRequest.setText("");
+        txtResponse.setText("");
+
+        Object itemSel = map.get(cbServiceType.getSelectedItem());
+        if (itemSel != null) {
+            txtApiRequest.setText(itemSel.toString());
+            String reqFile = loadJsonSampleFile(cbServiceType.getSelectedItem().toString());
+            if ("".equals(reqFile)) {
+                txtRequest.setText("");
+                txtResponse.setText("");
+                rdGet.setSelected(true);
+            } else {
+                txtRequest.setText(reqFile);
+                txtResponse.setText("");
+                rdPost.setSelected(true);
+            }
+
         }
     }
 
     private void requestAction() {
-        
+        if (inValidRequest()) {
+            JOptionPane.showMessageDialog(this, "กรุณาระบุข้อมูลใน {} ให้ครบถ้วน !");
+            return;
+        }
+        String data;
+        if (rdPost.isSelected()) {
+            data = TaskPost.sendPost(txtRequest.getText(), txtApiRequest.getText());
+            txtResponse.setText(formatJson(data));
+        } else if (rdGet.isSelected()) {
+            data = TaskPost.sendGet(txtApiRequest.getText());
+            txtResponse.setText(formatJson(data));
+        }
+    }
+
+    private static String formatJson(String data) {
+        String temp = "";
+        data = data.replace(",", ",\n    ");
+        for (int i = 0; i < data.length(); i++) {
+            String c = "" + data.charAt(i);
+            if (c.contains("{")) {
+                c = "\n" + c + "\n    ";
+            } else if (c.contains("}")) {
+                c = "\n" + c;
+            }
+            temp += c;
+        }
+        temp = temp.trim();
+        return temp;
+    }
+
+    public static void main(String[] args) {
+//        String json = "{\"brandId\":\"1100001\",\"branchId\":\"00132\",\"terminalId\":\"69000132\",\"serialNumber\":\"869826022379141\",\"activationCode\":\"99999999\"}";
+        String json = "{\"id\":\"001\",\"name\":\"nathee\",\"address\":{\"no\":\"292/1\",\"province\":\"uthai thani\"}}";
+        String data = formatJson(json);
+        System.out.println(data);
+    }
+
+    private String loadJsonSampleFile(String apiName) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("json/" + apiName + "_req.json").getFile());
+
+        StringBuilder result = new StringBuilder("");
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                result.append(line).append("\n");
+            }
+            scanner.close();
+        } catch (IOException e) {
+        }
+
+        return result.toString();
+    }
+
+    private boolean inValidRequest() {
+        return txtApiRequest.getText().contains("{");
     }
 }

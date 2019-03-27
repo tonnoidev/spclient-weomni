@@ -18,18 +18,14 @@ import th.co.softpos.ws.client.WSConstants;
 
 public class TaskPost {
 
-    public static void main(String[] args) {
-        sendGet();
-    }
-
     private static String getStreamStr(InputStream is) {
         return new Scanner(is, "UTF-8").useDelimiter("\\Z").next();
     }
 
-    private static String sendGet() {
+    public static String sendGet(String apiUri) {
         String json = null;
         try {
-            URL url = new URL(WSConstants.API_POS_HEALTH);
+            URL url = new URL(apiUri);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setDoOutput(true);
             con.setInstanceFollowRedirects(false);
@@ -42,8 +38,16 @@ public class TaskPost {
             int status = con.getResponseCode();
             String msg = con.getResponseMessage();
 
-            InputStream inStream = con.getInputStream();
-            json = getStreamStr(inStream); // input stream to string
+            if (status == 200) {
+                if (WSConstants.API_POS_HEALTH.equals(apiUri)) {
+                    json = "Service is available :)";
+                    return json;
+                }
+                InputStream inStream = con.getInputStream();
+                json = getStreamStr(inStream); // input stream to string
+            } else {
+                json = "" + status + " " + msg;
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -51,12 +55,10 @@ public class TaskPost {
         return json;
     }
 
-    private static String sendPost() {
-//        String tokenResponse = getToken();
-
+    public static String sendPost(String jsonData, String apiUri) {
         String json = null;
         try {
-            URL url = new URL(WSConstants.API_ACTIVATE);
+            URL url = new URL(apiUri);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setDoOutput(true);
             con.setRequestMethod("POST");
@@ -65,24 +67,6 @@ public class TaskPost {
             con.setRequestProperty("Authorization", "Bearer " + POSConstant.ACCESS_TOKEN);
             con.setConnectTimeout(5000);
 
-            String jsonData = "{\n"
-                    + "  \"activationCode\": \"99999999\",\n"
-                    + "  \"imei\": \"869826022379141\",\n"
-                    + "  \"latitude\": 13.7645001,\n"
-                    + "  \"longitude\": 100.5679174,\n"
-                    + "  \"password\": \"2222\",\n"
-                    + "  \"external\": false\n"
-                    + "}";
-            /*
-                {
-                    "activationCode": "99999999",
-                    "imei": "869826022379141",
-                    "latitude": 13.7645001,
-                    "longitude": 100.5679174,
-                    "password": "2222",
-                    "external": false
-                }
-             */
             try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
                 wr.writeBytes(jsonData);
                 wr.flush();
@@ -91,16 +75,20 @@ public class TaskPost {
             int status = con.getResponseCode();
             String msg = con.getResponseMessage();
 
-            StringBuilder response;
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-                String inputLine;
-                response = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
+            if (status == 200) {
+                StringBuilder response;
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                    String inputLine;
+                    response = new StringBuilder();
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
                 }
-            }
 
-            json = response.toString();
+                json = response.toString();
+            } else {
+                json = "" + status + " " + msg;
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -108,7 +96,7 @@ public class TaskPost {
         return json;
     }
 
-    private static String getToken() {
+    public static String getToken() {
         Logger logger = Logger.getLogger("SoftLog");
         String tokenResponse = null;
 
@@ -178,27 +166,6 @@ public class TaskPost {
             Logger.getLogger(TaskPost.class.getName()).log(Level.SEVERE, e.getMessage());
         }
 
-        /*
-        INFO: Response JSON 
-            {
-              "refresh_token_expires_in": "0",
-              "api_product_list": "[pos-partner-services]",
-              "api_product_list_json": [
-                "pos-partner-services"
-              ],
-              "organization_name": "weomni",
-              "developer.email": "md@softpos.co.th",
-              "token_type": "Bearer",
-              "issued_at": "1553308347303",
-              "client_id": "aYYU357MyCYhObJ9OC1PC5TVbemloozG",
-              "access_token": "oH1KpGj6RDylZgb62vYfVi47LUYG",
-              "application_name": "427bcc7f-5853-4281-9e1b-af34a1714d02",
-              "scope": "",
-              "expires_in": "0",
-              "refresh_count": "0",
-              "status": "approved"
-            }
-         */
         return tokenResponse;
     }
 

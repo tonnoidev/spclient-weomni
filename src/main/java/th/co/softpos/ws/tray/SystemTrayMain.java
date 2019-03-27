@@ -10,7 +10,7 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-import javax.swing.JOptionPane;
+import th.co.softpos.ws.main.SPClientUI;
 
 public class SystemTrayMain {
 
@@ -29,7 +29,8 @@ public class SystemTrayMain {
         action.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Action Clicked");
+                SPClientUI openUi = new SPClientUI(null, true);
+                openUi.setVisible(true);
             }
         });
         trayPopupMenu.add(action);
