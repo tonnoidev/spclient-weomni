@@ -20,6 +20,7 @@ public class ServiceReq {
     private String accountType;
     private String accountValue;
     private String rewardCode;
+    private String earnPointAmount;
     private BigDecimal amount;
     private BigDecimal paymentAmount;
     private String paymentCurrency;
@@ -29,6 +30,9 @@ public class ServiceReq {
     private String reqId;
     private String reqStatus;
     private Date reqDatetime;
-    private String api_name;
-
+    private String apiName;
+    private String paramTerminalId;
+    private String paramTraceId;
+    private String redeemType;
+    
 }

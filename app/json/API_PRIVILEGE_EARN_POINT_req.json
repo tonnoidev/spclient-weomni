@@ -1,0 +1,10 @@
+{
+    "brandId": "1100001",
+    "branchId": "00006",
+    "account": {
+        "type": "THAIID",
+        "value": "2000000000104"
+    },
+    "amount": 10000,
+    "external": false
+}

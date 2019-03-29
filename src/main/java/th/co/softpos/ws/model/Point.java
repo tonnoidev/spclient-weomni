@@ -5,7 +5,7 @@ import java.util.List;
 public class Point {
 
     private Integer balance;
-    private Pockets[] pockets;
+    private List<Pockets> pockets;
 
     public Integer getBalance() {
         return balance;
@@ -15,11 +15,11 @@ public class Point {
         this.balance = balance;
     }
 
-    public Pockets[] getPockets() {
+    public List<Pockets> getPockets() {
         return pockets;
     }
 
-    public void setPockets(Pockets[] pockets) {
+    public void setPockets(List<Pockets> pockets) {
         this.pockets = pockets;
     }
 

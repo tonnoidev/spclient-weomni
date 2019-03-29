@@ -1,5 +1,8 @@
 package th.co.softpos.ws.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class WSConstants {
 
     public static final String DB_SERVICES = "pos_services";
@@ -31,5 +34,39 @@ public class WSConstants {
 
     // Health check
     public static final String API_POS_HEALTH = HOST_API + "/pos/health";
+
+    public static final String[] API_NAMES = new String[]{
+        "API_ACTIVATE",
+        "API_PRIVILEGE_REDEEM_CAMPAIGN",
+        "API_PRIVILEGE_REDEEM_CODE",
+        "API_PRIVILEGE_EARN_POINT",
+        "API_PRIVILEGE_TRUE_YOU_CARD",
+        "API_PRIVILEGE_EARN_POINT_VOID",
+        "API_PRIVILEGE_BURN_POINT_VOID",
+        "API_CAMPAIGN",
+        "API_PAYMENTS",
+        "API_PAYMENTS_VOID",
+        "API_POS_HEALTH"
+    };
+
+    public static final Map MAP_SERVICES = new HashMap();
+    public static String WAIT = "WAIT";
+    public static String ERROR = "ERROR";
+    public static String NOT_FOUND = "NOT FOUND";
+    public static String FINISH = "FINISH";
+
+    static {
+        MAP_SERVICES.put(WSConstants.API_NAMES[0], WSConstants.API_ACTIVATE);
+        MAP_SERVICES.put(WSConstants.API_NAMES[1], WSConstants.API_PRIVILEGE_REDEEM_CAMPAIGN);
+        MAP_SERVICES.put(WSConstants.API_NAMES[2], WSConstants.API_PRIVILEGE_REDEEM_CODE);
+        MAP_SERVICES.put(WSConstants.API_NAMES[3], WSConstants.API_PRIVILEGE_EARN_POINT);
+        MAP_SERVICES.put(WSConstants.API_NAMES[4], WSConstants.API_PRIVILEGE_TRUE_YOU_CARD);
+        MAP_SERVICES.put(WSConstants.API_NAMES[5], WSConstants.API_PRIVILEGE_EARN_POINT_VOID);
+        MAP_SERVICES.put(WSConstants.API_NAMES[6], WSConstants.API_PRIVILEGE_BURN_POINT_VOID);
+        MAP_SERVICES.put(WSConstants.API_NAMES[7], WSConstants.API_CAMPAIGN);
+        MAP_SERVICES.put(WSConstants.API_NAMES[8], WSConstants.API_PAYMENTS);
+        MAP_SERVICES.put(WSConstants.API_NAMES[9], WSConstants.API_PAYMENTS_VOID);
+        MAP_SERVICES.put(WSConstants.API_NAMES[10], WSConstants.API_POS_HEALTH);
+    }
 
 }

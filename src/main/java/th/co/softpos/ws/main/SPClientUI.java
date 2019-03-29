@@ -1,17 +1,17 @@
 package th.co.softpos.ws.main;
 
+import th.co.softpos.ws.client.TaskPost;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
@@ -22,32 +22,11 @@ import th.co.softpos.ws.model.AccessToken;
 
 public class SPClientUI extends javax.swing.JDialog {
 
-    private final Map map = new HashMap();
-    private final String[] API = new String[]{
-        "API_ACTIVATE",
-        "API_PRIVILEGE_REDEEM_CAMPAIGN",
-        "API_PRIVILEGE_REDEEM_CODE",
-        "API_PRIVILEGE_EARN_POINT",
-        "API_PRIVILEGE_TRUE_YOU_CARD",
-        "API_PRIVILEGE_EARN_POINT_VOID",
-        "API_PRIVILEGE_BURN_POINT_VOID",
-        "API_CAMPAIGN",
-        "API_PAYMENTS",
-        "API_PAYMENTS_VOID",
-        "API_POS_HEALTH"
-    };
-
     public SPClientUI(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
 
-        try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource("services_tray.png").getFile());
-            Image image = ImageIO.read(file);
-            this.setIconImage(image);
-        } catch (IOException e) {
-        }
+        initWindow();
 
         initCombo();
         loadToken();
@@ -119,17 +98,17 @@ public class SPClientUI extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnRequest)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                     .addComponent(jLabel4))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(207, 207, 207))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,8 +121,9 @@ public class SPClientUI extends javax.swing.JDialog {
                         .addComponent(jLabel3)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4)))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4))
+                .addGap(6, 6, 6))
         );
 
         jTabbedPane1.addTab("Client Information", jPanel1);
@@ -185,19 +165,19 @@ public class SPClientUI extends javax.swing.JDialog {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnGenerateToken)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtToken))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 808, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(cbServiceType, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(rdGet)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rdPost)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1))
-                        .addContainerGap())))
+                                .addComponent(rdPost))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnGenerateToken)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtToken, javax.swing.GroupLayout.PREFERRED_SIZE, 679, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,10 +193,10 @@ public class SPClientUI extends javax.swing.JDialog {
                     .addComponent(rdGet)
                     .addComponent(rdPost))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jTabbedPane1)
+                .addGap(21, 21, 21))
         );
 
         pack();
@@ -228,7 +208,11 @@ public class SPClientUI extends javax.swing.JDialog {
     }//GEN-LAST:event_cbServiceTypeItemStateChanged
 
     private void btnRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRequestActionPerformed
-        requestAction();
+        try {
+            requestAction();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "API Error", "API Error\n" + ex.getMessage(), JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnRequestActionPerformed
 
     private void btnGenerateTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateTokenActionPerformed
@@ -260,19 +244,7 @@ public class SPClientUI extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void initCombo() {
-        map.put(API[0], WSConstants.API_ACTIVATE);
-        map.put(API[1], WSConstants.API_PRIVILEGE_REDEEM_CAMPAIGN);
-        map.put(API[2], WSConstants.API_PRIVILEGE_REDEEM_CODE);
-        map.put(API[3], WSConstants.API_PRIVILEGE_EARN_POINT);
-        map.put(API[4], WSConstants.API_PRIVILEGE_TRUE_YOU_CARD);
-        map.put(API[5], WSConstants.API_PRIVILEGE_EARN_POINT_VOID);
-        map.put(API[6], WSConstants.API_PRIVILEGE_BURN_POINT_VOID);
-        map.put(API[7], WSConstants.API_CAMPAIGN);
-        map.put(API[8], WSConstants.API_PAYMENTS);
-        map.put(API[9], WSConstants.API_PAYMENTS_VOID);
-        map.put(API[10], WSConstants.API_POS_HEALTH);
-
-        for (String apiUri : API) {
+        for (String apiUri : WSConstants.API_NAMES) {
             cbServiceType.addItem(apiUri);
         }
     }
@@ -281,7 +253,7 @@ public class SPClientUI extends javax.swing.JDialog {
         txtRequest.setText("");
         txtResponse.setText("");
 
-        Object itemSel = map.get(cbServiceType.getSelectedItem());
+        Object itemSel = WSConstants.MAP_SERVICES.get(cbServiceType.getSelectedItem());
         if (itemSel != null) {
             txtApiRequest.setText(itemSel.toString());
             String reqFile = loadJsonSampleFile(cbServiceType.getSelectedItem().toString());
@@ -298,7 +270,7 @@ public class SPClientUI extends javax.swing.JDialog {
         }
     }
 
-    private void requestAction() {
+    private void requestAction() throws Exception {
         if (inValidRequest()) {
             JOptionPane.showMessageDialog(this, "กรุณาระบุข้อมูลใน { } ให้ครบถ้วน !");
             return;
@@ -330,8 +302,7 @@ public class SPClientUI extends javax.swing.JDialog {
     }
 
     private String loadJsonSampleFile(String apiName) {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("json/" + apiName + "_req.json").getFile());
+        File file = new File("app/json/" + apiName + "_req.json");
 
         StringBuilder result = new StringBuilder("");
         try (Scanner scanner = new Scanner(file)) {
@@ -368,9 +339,8 @@ public class SPClientUI extends javax.swing.JDialog {
     private void loadToken() {
         Properties prop = new Properties();
         InputStream input = null;
-        ClassLoader classLoader = getClass().getClassLoader();
         try {
-            input = new FileInputStream(classLoader.getResource("config.properties").getFile());
+            input = new FileInputStream("app/config.properties");
             prop.load(input);
 
             POSConstant.CLIENT_ID = prop.getProperty("CLIENT_ID");
@@ -393,9 +363,8 @@ public class SPClientUI extends javax.swing.JDialog {
     private void writeToken() {
         Properties prop = new Properties();
         OutputStream output = null;
-        ClassLoader classLoader = getClass().getClassLoader();
         try {
-            output = new FileOutputStream(classLoader.getResource("config.properties").getFile());
+            output = new FileOutputStream("app/config.properties");
             prop.setProperty("CLIENT_ID", POSConstant.CLIENT_ID);
             prop.setProperty("CLIENT_SECRET", POSConstant.CLIENT_SECRET);
             prop.setProperty("ACCESS_TOKEN", txtToken.getText());
@@ -409,6 +378,18 @@ public class SPClientUI extends javax.swing.JDialog {
                 }
             }
         }
+    }
+
+    private void initWindow() {
+        try {
+            File file = new File("app/services_tray.png");
+            Image image = ImageIO.read(file);
+            this.setIconImage(image);
+        } catch (IOException e) {
+        }
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(0, 0);
+        setSize(screenSize);
     }
 
 }

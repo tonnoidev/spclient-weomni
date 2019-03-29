@@ -1,7 +1,6 @@
 package th.co.softpos.ws.dto;
 
 import th.co.softpos.ws.model.Account;
-import java.math.BigDecimal;
 
 /*
 brandId*	string
@@ -48,7 +47,7 @@ public class CreateEarnPointDTO {
     private String brandId;
     private String branchId;
     private Account account;
-    private BigDecimal amount;
+    private Integer amount;
     private Boolean external;
 
     public String getBrandId() {
@@ -75,11 +74,11 @@ public class CreateEarnPointDTO {
         this.account = account;
     }
 
-    public BigDecimal getAmount() {
+    public Integer getAmount() {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(Integer amount) {
         this.amount = amount;
     }
 

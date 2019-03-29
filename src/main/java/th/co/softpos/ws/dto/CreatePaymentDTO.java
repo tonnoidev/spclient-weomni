@@ -1,6 +1,6 @@
 package th.co.softpos.ws.dto;
 
-import th.co.softpos.ws.model.Payment;
+import th.co.softpos.ws.model.req.Payment;
 
 /*
 brandId*	string

@@ -1,0 +1,13 @@
+[
+    {
+        "code": "XXX",
+        "displayCode": "YYY",
+        "messsage": "error message will display here.",
+        "fields": [
+            {
+                "name": "fieldName",
+                "message": "Error message for fieldName"
+            }
+        ]
+    }
+]

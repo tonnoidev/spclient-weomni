@@ -1,4 +1,4 @@
-package th.co.softpos.ws.main;
+package th.co.softpos.ws.client;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,8 +15,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import th.co.softpos.ws.client.POSConstant;
-import th.co.softpos.ws.client.WSConstants;
 
 // curl -u h0NI9uOB1YTVdsxy48s3JDpkp94Bl4Lb:sWVbMBtLXY1mySMh https://api.weomni-test.com/oauth/token -d "grant_type=client_credentials"
 public class RequestToken {

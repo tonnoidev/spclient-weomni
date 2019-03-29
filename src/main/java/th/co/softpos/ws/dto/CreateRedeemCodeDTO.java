@@ -32,7 +32,7 @@ public class CreateRedeemCodeDTO {
     private String branchId;
     private String campaignCode;
     private String rewardCode;
-    private String external;
+    private Boolean external;
 
     public String getBrandId() {
         return brandId;
@@ -66,11 +66,11 @@ public class CreateRedeemCodeDTO {
         this.rewardCode = rewardCode;
     }
 
-    public String getExternal() {
+    public Boolean getExternal() {
         return external;
     }
 
-    public void setExternal(String external) {
+    public void setExternal(Boolean external) {
         this.external = external;
     }
 

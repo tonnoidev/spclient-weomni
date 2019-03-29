@@ -1,0 +1,25 @@
+{
+    "brandId": "1100001",
+    "branchId": "00006",
+    "terminalId": "69000006",
+    "transactionType": "POINT_CANCEL",
+    "payment": {
+        "traceId": "000001",
+        "batchId": "000076",
+        "transactionReferenceId": "2018041015543027",
+        "transactionDate": "2018-04-10T15:54:30.326",
+        "amount": 100,
+        "currency": "THB",
+        "code": "00002108051364",
+        "method": "WALLET"
+    },
+    "account": {
+        "type": "TRUECARD",
+        "value": "8881408882765089"
+    },
+    "trueYouId": "101110000100006",
+    "campaign": {
+        "name": ""
+    },
+    "point": "string"
+}

@@ -1,4 +1,4 @@
-package th.co.softpos.ws.main;
+package th.co.softpos.ws.client;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -13,8 +13,6 @@ import java.util.Base64;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import th.co.softpos.ws.client.POSConstant;
-import th.co.softpos.ws.client.WSConstants;
 
 public class TaskPost {
 
@@ -22,8 +20,8 @@ public class TaskPost {
         return new Scanner(is, "UTF-8").useDelimiter("\\Z").next();
     }
 
-    public static String sendGet(String apiUri) {
-        String json = null;
+    public static String sendGet(String apiUri) throws Exception {
+        String json;
         try {
             URL url = new URL(apiUri);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -41,23 +39,25 @@ public class TaskPost {
 
             if (status == HttpURLConnection.HTTP_OK) {
                 if (WSConstants.API_POS_HEALTH.equals(apiUri)) {
-                    json = "Service is available :)";
+                    json = "Service is available";
                     return json;
+                } else {
+                    InputStream inStream = con.getInputStream();
+                    json = getStreamStr(inStream);
                 }
-                InputStream inStream = con.getInputStream();
-                json = getStreamStr(inStream); // input stream to string
             } else {
                 json = "     status:" + status + " , msg:" + msg;
                 json += getStreamStr(con.getErrorStream());
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            json = null;
+            throw ex;
         }
 
         return json;
     }
 
-    public static String sendPost(String jsonData, String apiUri) {
+    public static String sendPost(String jsonData, String apiUri) throws Exception {
         String json = null;
         try {
             URL url = new URL(apiUri);
@@ -94,7 +94,7 @@ public class TaskPost {
 
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            throw ex;
         }
 
         return json;

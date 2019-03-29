@@ -58,7 +58,6 @@ public class ServiceRes {
     private String pointStr;
     private String resData;
     private String resStatus;
-    private Date reqDatetime;
-    private Integer reqTimeDiff;
+    private Date resDatetime;
 
 }

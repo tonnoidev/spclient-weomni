@@ -1,6 +1,7 @@
 package th.co.softpos.ws.dto;
 
 import java.io.Serializable;
+import java.util.List;
 import th.co.softpos.ws.model.Page;
 import th.co.softpos.ws.model.Content;
 
@@ -96,14 +97,14 @@ Has previous page
  */
 public class CampaignDTO implements Serializable {
 
-    private Content[] content;
+    private List<Content> content;
     private Page page;
 
-    public Content[] getContent() {
+    public List<Content> getContent() {
         return content;
     }
 
-    public void setContent(Content[] content) {
+    public void setContent(List<Content> content) {
         this.content = content;
     }
 
