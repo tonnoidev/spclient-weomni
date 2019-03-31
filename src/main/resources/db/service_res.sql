@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `service_req`;
 CREATE TABLE `service_res` (
-  `uid` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` varchar(100) NOT NULL DEFAULT '',
   `req_id` varchar(100) DEFAULT NULL,
   `brand_id` varchar(20) DEFAULT NULL,
   `branch_id` varchar(20) DEFAULT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE `service_res` (
   `tran_trac_id` varchar(20) DEFAULT NULL,
   `tran_bat_id` varchar(20) DEFAULT NULL,
   `tran_ref_id` varchar(20) DEFAULT NULL,
-  `tran_date` date DEFAULT NULL,
+  `tran_date` datetime DEFAULT NULL,
   `tran_point` varchar(20) DEFAULT NULL,
   `tran_amt` double(10,2) DEFAULT NULL,
   `cust_ref_id` varchar(20) DEFAULT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE `service_res` (
   `pay_trac_id` varchar(20) DEFAULT NULL,
   `pay_bat_id` varchar(20) DEFAULT NULL,
   `pay_tran_ref_id` varchar(20) DEFAULT NULL,
-  `pay_tran_date` date DEFAULT NULL,
+  `pay_tran_date` datetime DEFAULT NULL,
   `pay_amt` double(10,2) DEFAULT NULL,
   `pay_curr` varchar(20) DEFAULT NULL,
   `pay_code` varchar(20) DEFAULT NULL,
@@ -46,12 +46,11 @@ CREATE TABLE `service_res` (
   `cont_camp_img_url` varchar(20) DEFAULT NULL,
   `cont_camp_start` varchar(20) DEFAULT NULL,
   `cont_camp_end` varchar(20) DEFAULT NULL,
-  `cont_camp_last_modified` varchar(20) DEFAULT NULL,
+  `cont_camp_last_modified` varchar(40) DEFAULT NULL,
   `cont_camp_status` varchar(20) DEFAULT NULL,
   `point_str` varchar(20) DEFAULT NULL,
   `res_data` varchar(255) DEFAULT NULL,
   `res_status` varchar(20) DEFAULT NULL COMMENT 'success, timeout, error',
-  `req_datetime` date DEFAULT NULL,
-  `req_time_diff` int(8) DEFAULT NULL,
+  `res_datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`uid`)
 );

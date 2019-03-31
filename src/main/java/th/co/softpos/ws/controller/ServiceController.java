@@ -3,7 +3,11 @@ package th.co.softpos.ws.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -13,11 +17,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 import javax.swing.JOptionPane;
 import th.co.softpos.db.model.ServiceDocs;
 import th.co.softpos.db.model.ServiceReq;
 import th.co.softpos.db.model.ServiceRes;
+import th.co.softpos.ws.client.POSConstant;
 import th.co.softpos.ws.client.TaskPost;
 import th.co.softpos.ws.client.WSConstants;
 import th.co.softpos.ws.dto.ActivateDTO;
@@ -45,6 +51,29 @@ import th.co.softpos.ws.util.SPUtil;
 import th.co.softpos.ws.util.ThaiUtil;
 
 public class ServiceController {
+
+    static {
+        Properties prop = new Properties();
+        InputStream input = null;
+        try {
+            input = new FileInputStream("app/config.properties");
+            prop.load(input);
+
+            POSConstant.CLIENT_ID = prop.getProperty("CLIENT_ID");
+            POSConstant.CLIENT_SECRET = prop.getProperty("CLIENT_SECRET");
+            POSConstant.ACCESS_TOKEN = prop.getProperty("ACCESS_TOKEN");
+            POSConstant.APP_ID = prop.getProperty("APP_ID");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "IO Error: " + e.getMessage(), "File Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
 
     String getUUID() {
         return UUID.randomUUID().toString();
@@ -192,7 +221,7 @@ public class ServiceController {
             myConn = DriverManager.getConnection(DBConstant.DRIVER, DBConstant.USERNAME, DBConstant.PASSWORD);
             stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            sql = "select * from service_req where req_id is null limit 0,1 ";
+            sql = "select * from service_req where req_id is null or req_id='' limit 0,1 ";
             try (ResultSet rs = stmt.executeQuery(sql)) {
                 if (rs.next()) {
                     try {
@@ -327,7 +356,12 @@ public class ServiceController {
 
         String data = TaskPost.sendPost(json, apiUri);
         // logic
-        ActivateDTO bean = gson.fromJson(data, ActivateDTO.class);
+        ActivateDTO bean = null;
+        try {
+            bean = gson.fromJson(data, ActivateDTO.class);
+        } catch (JsonSyntaxException e) {
+        }
+
         if (bean == null) {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
@@ -645,7 +679,7 @@ public class ServiceController {
             stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             String reqId = getUUID();
             sql = "update service_req "
-                    + "set req_id='" + reqId + "', req_datetime=curdate(), req_status='" + status + "' "
+                    + "set req_id='" + reqId + "', req_datetime=now(), req_status='" + status + "' "
                     + "where uid='" + uid + "'";
             stmt.executeUpdate(sql);
             myConn.commit();
@@ -679,16 +713,16 @@ public class ServiceController {
             //create new response
             String resId = getUUID();
             sql = "insert into service_res"
-                    + "(uid, req_id, res_data,res_status, res_datetime,"
-                    + "true_card_no, card_holder_name, true_card_type, true_card_status, true_card_expired, "
-                    + "point_balance, point_pack_desc, point_pack_balance, point_pack_expired, "
+                    + "(uid, req_id, res_data, res_status, res_datetime, "
+                    + "true_card_no, card_holder_name, true_card_type, "
+                    + "true_card_status, true_card_expired, point_balance, "
+                    + "point_pack_desc, point_pack_balance, point_pack_expired, "
                     + "sliptype_id, sliptype_desc) "
-                    + "values("
-                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', curdate(),"
-                    + "'" + bean.getFalses() + "', '" + bean.getName() + "', '" + bean.getType() + "', '" + bean.getStatus() + "', '" + bean.getExpired() + "',"
-                    + "'" + bean.getPoint().getBalance() + "', '" + bean.getPoint().getPockets().get(0) + "', '" + bean.getPoint().getPockets().get(1) + "', '" + bean.getPoint().getPockets().get(2) + "',"
-                    + "'" + bean.getSlipType().getId() + "', '" + bean.getSlipType().getDescription() + "'"
-                    + ")";
+                    + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
+                    + "'" + bean.getFalses() + "', '" + bean.getName() + "', '" + bean.getType() + "', "
+                    + "'" + bean.getStatus() + "', '" + bean.getExpired() + "','" + bean.getPoint().getBalance() + "', "
+                    + "'" + bean.getPoint().getPockets().get(0) + "', '" + bean.getPoint().getPockets().get(1) + "', '" + bean.getPoint().getPockets().get(2) + "',"
+                    + "'" + bean.getSlipType().getId() + "', '" + bean.getSlipType().getDescription() + "')";
             stmt.executeUpdate(sql);
             myConn.commit();
         } catch (ClassNotFoundException | SQLException e) {
@@ -721,26 +755,16 @@ public class ServiceController {
             //create new response
             String resId = getUUID();
             sql = "insert into service_res"
-                    + "(uid, req_id, res_data,res_status, res_datetime,"
+                    + "(uid, req_id, res_data, res_status, res_datetime,"
                     + "brand_id, branch_id, terminal_id, "
-                    + "cont_camp_code, "
-                    + "cont_camp_name, "
-                    + "cont_camp_img_url, "
-                    + "cont_camp_start, "
-                    + "cont_camp_end, "
-                    + "cont_camp_last_modified, "
+                    + "cont_camp_code, cont_camp_name, cont_camp_img_url, "
+                    + "cont_camp_start, cont_camp_end, cont_camp_last_modified, "
                     + "cont_camp_status) "
-                    + "values("
-                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', curdate(),"
+                    + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
                     + "'" + bean.getContent().get(0).getBrandId() + "', '" + bean.getContent().get(0).getBranchId() + "', '" + bean.getContent().get(0).getTerminalId() + "',"
-                    + "'" + bean.getContent().get(0).getCampaign().getCode() + "', "
-                    + "'" + bean.getContent().get(0).getCampaign().getName() + "', "
-                    + "'" + bean.getContent().get(0).getCampaign().getImageUrl() + "', "
-                    + "'" + bean.getContent().get(0).getCampaign().getStart() + "', "
-                    + "'" + bean.getContent().get(0).getCampaign().getEnd() + "', "
-                    + "'" + bean.getContent().get(0).getCampaign().getLastModifiedDate() + "', "
-                    + "'" + bean.getContent().get(0).getCampaign().getStatus() + "'"
-                    + ")";
+                    + "'" + bean.getContent().get(0).getCampaign().getCode() + "', '" + bean.getContent().get(0).getCampaign().getName() + "', '" + bean.getContent().get(0).getCampaign().getImageUrl() + "', "
+                    + "'" + bean.getContent().get(0).getCampaign().getStart() + "', '" + bean.getContent().get(0).getCampaign().getEnd() + "', '" + bean.getContent().get(0).getCampaign().getLastModifiedDate() + "', "
+                    + "'" + bean.getContent().get(0).getCampaign().getStatus() + "')";
             stmt.executeUpdate(sql);
             myConn.commit();
         } catch (ClassNotFoundException | SQLException e) {
@@ -776,10 +800,9 @@ public class ServiceController {
                     + "(uid, req_id, res_data,res_status, res_datetime,"
                     + "brand_id, branch_id, terminal_id, "
                     + "serial_no, act_code) "
-                    + "values("
-                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', curdate(),"
+                    + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
                     + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '" + bean.getTerminalId() + "', "
-                    + "'" + bean.getSerialNumner() + "', '" + bean.getActivationCode() + "')";
+                    + "'" + bean.getSerialNumber()+ "', '" + bean.getActivationCode() + "')";
             stmt.executeUpdate(sql);
             myConn.commit();
         } catch (ClassNotFoundException | SQLException e) {
@@ -817,8 +840,7 @@ public class ServiceController {
                     + "true_you_id, tran_trac_id, tran_bat_id, "
                     + "tran_ref_id, tran_date, cust_ref_id, "
                     + "cust_point_used, cust_point_balance) "
-                    + "values("
-                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', curdate(),"
+                    + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
                     + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '" + bean.getTerminalId() + "', "
                     + "'" + bean.getTrueYouId() + "', '" + bean.getTransaction().getTraceId() + "', '" + bean.getTransaction().getBatchId() + "',  "
                     + "'" + bean.getTransaction().getTransactionReferenceId() + "', '" + bean.getTransaction().getTransactionDate() + "', '" + bean.getCustomer().getCustomerReferenceId() + "', "
@@ -859,8 +881,7 @@ public class ServiceController {
                     + "brand_id, branch_id, terminal_id, "
                     + "true_you_id, tran_trac_id, tran_bat_id, "
                     + "tran_ref_id, tran_date, rew_code) "
-                    + "values("
-                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', curdate(),"
+                    + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
                     + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '" + bean.getTerminalId() + "', "
                     + "'" + bean.getTrueYouId() + "', '" + bean.getTransaction().getTraceId() + "', '" + bean.getTransaction().getBatchId() + "',  "
                     + "'" + bean.getTransaction().getTransactionReferenceId() + "', '" + bean.getTransaction().getTransactionDate() + "', '" + bean.getRewardCode() + "')";
@@ -902,8 +923,7 @@ public class ServiceController {
                     + "tran_ref_id, tran_date, "
                     + "acc_type, acc_value, "
                     + "tran_point, tran_amt) "
-                    + "values("
-                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', curdate(),"
+                    + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
                     + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '" + bean.getTerminalId() + "', "
                     + "'" + bean.getTrueYouId() + "', '" + bean.getTransaction().getTraceId() + "', '" + bean.getTransaction().getBatchId() + "',  "
                     + "'" + bean.getTransaction().getTransactionReferenceId() + "', '" + bean.getTransaction().getTransactionDate() + "', "
@@ -949,7 +969,7 @@ public class ServiceController {
                     + "pay_curr, pay_code, pay_method, "
                     + "camp_name, point_str) "
                     + "values("
-                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', curdate(),"
+                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
                     + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '" + bean.getTerminalId() + "', "
                     + "'" + bean.getTrueYouId() + "', '" + bean.getAccount().getType() + "', '" + bean.getAccount().getValue() + "', "
                     + "'" + bean.getTransactionType() + "', '" + bean.getPayment().getTraceId() + "', '" + bean.getPayment().getBatchId() + "', "
@@ -993,8 +1013,7 @@ public class ServiceController {
                     + "true_you_id, pay_trac_id, pay_bat_id, "
                     + "pay_tran_ref_id, pay_tran_date, pay_amt, "
                     + "pay_curr, pay_code, pay_method) "
-                    + "values("
-                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', curdate(),"
+                    + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
                     + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '" + bean.getTerminalId() + "', "
                     + "'" + bean.getTrueYouId() + "', '" + bean.getPayment().getTraceId() + "', '" + bean.getPayment().getBatchId() + "', "
                     + "'" + bean.getPayment().getTransactionReferenceId() + "', '" + bean.getPayment().getTransactionDate() + "', '" + bean.getPayment().getAmount() + "', "
@@ -1039,7 +1058,7 @@ public class ServiceController {
                     + "true_you_id, acc_type, acc_value, "
                     + "tran_type, camp_name, point_str) "
                     + "values("
-                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', curdate(),"
+                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
                     + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '" + bean.getTerminalId() + "', "
                     + "'" + bean.getTrueYouId() + "', '" + bean.getPayment().getTraceId() + "', '" + bean.getPayment().getBatchId() + "', "
                     + "'" + bean.getPayment().getTransactionReferenceId() + "', '" + bean.getPayment().getTransactionDate() + "', '" + bean.getPayment().getAmount() + "', "

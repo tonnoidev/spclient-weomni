@@ -5,6 +5,7 @@ public class POSConstant {
     public static String CLIENT_ID;
     public static String CLIENT_SECRET;
     public static String ACCESS_TOKEN;
+    public static String APP_ID;
     
     public static final int TIMEOUT = 5000;
     public static final int SCHEDULE_TASK = 10000;
@@ -30,4 +31,5 @@ public class POSConstant {
 
     // Health check
     public static final int TRIGGER_POS_HEALTH = 11;
+    
 }

@@ -46,10 +46,10 @@ public class TaskPost {
                     json = getStreamStr(inStream);
                 }
             } else {
-                json = "     status:" + status + " , msg:" + msg;
-                json += getStreamStr(con.getErrorStream());
+                json = getStreamStr(con.getErrorStream());
             }
         } catch (IOException ex) {
+            ex.printStackTrace();
             json = null;
             throw ex;
         }
@@ -58,7 +58,7 @@ public class TaskPost {
     }
 
     public static String sendPost(String jsonData, String apiUri) throws Exception {
-        String json = null;
+        String json;
         try {
             URL url = new URL(apiUri);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -89,11 +89,11 @@ public class TaskPost {
 
                 json = response.toString();
             } else {
-                json = "     status:" + status + " , msg:" + msg;
-                json += getStreamStr(con.getErrorStream());
+                json = getStreamStr(con.getErrorStream());
 
             }
         } catch (IOException ex) {
+            ex.printStackTrace();
             throw ex;
         }
 

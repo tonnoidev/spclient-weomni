@@ -2,7 +2,9 @@ DROP TABLE IF EXISTS `service_req`;
 CREATE TABLE `service_req` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `api_name` varchar(20) DEFAULT NULL,
-  `act_code` varchar(20) DEFAULT NULL,
+  `param_terminal_id` varchar(20) DEFAULT NULL,
+  `param_trace_id` varchar(20) DEFAULT NULL,
+  `act_code` varchar(20) DEFAULT NULL COMMENT 'Activation Code',
   `imei` varchar(20) DEFAULT NULL,
   `latitude` varchar(20) DEFAULT NULL,
   `longitude` varchar(20) DEFAULT NULL,
@@ -21,7 +23,8 @@ CREATE TABLE `service_req` (
   `pay_method` varchar(10) DEFAULT NULL COMMENT 'ALIPAY, WALLET',
   `pay_desc` varchar(150) DEFAULT NULL,
   `req_id` varchar(100) DEFAULT NULL,
-  `req_datetime` date DEFAULT NULL,
+  `req_datetime` datetime DEFAULT NULL,
   `req_status` varchar(20) DEFAULT NULL,
+  `redeem_type` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`uid`)
 );

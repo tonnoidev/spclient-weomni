@@ -33,7 +33,7 @@ public class ActivateDTO implements Serializable {
     private String brandId;
     private String branchId;
     private String terminalId;
-    private String serialNumner;
+    private String serialNumber;
     private String activationCode;
 
     public String getBrandId() {
@@ -60,12 +60,12 @@ public class ActivateDTO implements Serializable {
         this.terminalId = terminalId;
     }
 
-    public String getSerialNumner() {
-        return serialNumner;
+    public String getSerialNumber() {
+        return serialNumber;
     }
 
-    public void setSerialNumner(String serialNumner) {
-        this.serialNumner = serialNumner;
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
     public String getActivationCode() {
@@ -78,7 +78,7 @@ public class ActivateDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "ActivateDTO{" + "brandId=" + brandId + ", branchId=" + branchId + ", terminalId=" + terminalId + ", serialNumner=" + serialNumner + ", activationCode=" + activationCode + '}';
+        return "ActivateDTO{" + "brandId=" + brandId + ", branchId=" + branchId + ", terminalId=" + terminalId + ", serialNumber=" + serialNumber + ", activationCode=" + activationCode + '}';
     }
 
 }
