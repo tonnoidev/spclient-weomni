@@ -1,21 +1,8 @@
 package th.co.softpos.ws.dto;
 
-/*
-brandId*	string
-example: 1100001
-Brand/Merchant ID
-(แบรนด์/รหัสร้านค้า)
+import lombok.Data;
 
-branchId*	string
-example: 00006
-Branch ID
-(รหัสสาขา)
-
-external	boolean
-example: false
-Map external ids
-ต้องการใช้ external ids
- */
+@Data
 public class CreateVoidBurnPointDTO {
 
     private String brandId;

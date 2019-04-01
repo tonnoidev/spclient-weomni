@@ -49,7 +49,7 @@ CREATE TABLE `service_res` (
   `cont_camp_last_modified` varchar(40) DEFAULT NULL,
   `cont_camp_status` varchar(20) DEFAULT NULL,
   `point_str` varchar(20) DEFAULT NULL,
-  `res_data` varchar(255) DEFAULT NULL,
+  `res_data` text,
   `res_status` varchar(20) DEFAULT NULL COMMENT 'success, timeout, error',
   `res_datetime` datetime DEFAULT NULL,
   PRIMARY KEY (`uid`)

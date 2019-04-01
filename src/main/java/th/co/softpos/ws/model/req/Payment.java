@@ -1,5 +1,8 @@
 package th.co.softpos.ws.model.req;
 
+import lombok.Data;
+
+@Data
 public class Payment {
 
     private String amount;
@@ -14,51 +17,6 @@ public class Payment {
         this.code = code;
         this.method = method;
         this.description = description;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "Payment{" + "amount=" + amount + ", currency=" + currency + ", code=" + code + ", method=" + method + ", description=" + description + "}";
     }
 
 }
