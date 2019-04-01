@@ -1,0 +1,16 @@
+{
+    "brandId": "1100001",
+    "branchId": "00006",
+    "terminalId": "69000006",
+    "payment": {
+        "traceId": "000014",
+        "batchId": "000035",
+        "transactionReferenceId": "2017112817543357",
+        "transactionDate": "2017-11-28T17:54:33.55",
+        "currency": "THB",
+        "amount": "100",
+        "code": "00002108051364",
+        "method": "WALLET"
+    },
+    "trueYouId": "101110000100006"
+}

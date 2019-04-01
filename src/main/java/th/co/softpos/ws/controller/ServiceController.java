@@ -393,7 +393,11 @@ public class ServiceController {
 
         String data = TaskPost.sendPost(json, apiUri);
         // logic
-        RedeemCampaignDTO bean = gson.fromJson(data, RedeemCampaignDTO.class);
+        RedeemCampaignDTO bean = null;
+        try {
+            bean = gson.fromJson(data, RedeemCampaignDTO.class);
+        } catch (JsonSyntaxException e) {
+        }
         if (bean == null) {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
@@ -425,7 +429,12 @@ public class ServiceController {
 
         String data = TaskPost.sendPost(json, apiUri);
         // logic
-        RedeemCodeDTO bean = gson.fromJson(data, RedeemCodeDTO.class);
+        RedeemCodeDTO bean = null;
+        try {
+            bean = gson.fromJson(data, RedeemCodeDTO.class);
+        } catch (JsonSyntaxException e) {
+        }
+
         if (bean == null) {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
@@ -457,7 +466,11 @@ public class ServiceController {
 
         String data = TaskPost.sendPost(json, apiUri);
         // logic
-        EarnPointDTO bean = gson.fromJson(data, EarnPointDTO.class);
+        EarnPointDTO bean = null;
+        try {
+            bean = gson.fromJson(data, EarnPointDTO.class);
+        } catch (JsonSyntaxException e) {
+        }
         if (bean == null) {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
@@ -482,7 +495,11 @@ public class ServiceController {
         String data = TaskPost.sendGet(apiUri);
         // logic
         Gson gson = new GsonBuilder().create();
-        TrueYouCardDTO bean = gson.fromJson(data, TrueYouCardDTO.class);
+        TrueYouCardDTO bean = null;
+        try {
+            bean = gson.fromJson(data, TrueYouCardDTO.class);
+        } catch (JsonSyntaxException e) {
+        }
         if (bean == null) {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
@@ -515,7 +532,11 @@ public class ServiceController {
 
         String data = TaskPost.sendPost(json, apiUri);
         // logic
-        VoidEarnPointDTO bean = gson.fromJson(data, VoidEarnPointDTO.class);
+        VoidEarnPointDTO bean = null;
+        try {
+            bean = gson.fromJson(data, VoidEarnPointDTO.class);
+        } catch (JsonSyntaxException e) {
+        }
         if (bean == null) {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
@@ -525,7 +546,7 @@ public class ServiceController {
             }
         } else {
             updateServiceRequest(req.getUid(), WSConstants.FINISH);
-//            insertServiceResponse(bean, data, req.getUid(), WSConstants.FINISH);
+            insertServiceResponse(bean, data, req.getUid(), WSConstants.FINISH);
         }
     }
 
@@ -547,7 +568,11 @@ public class ServiceController {
 
         String data = TaskPost.sendPost(json, apiUri);
         // logic
-        VoidBurnPointDTO bean = gson.fromJson(data, VoidBurnPointDTO.class);
+        VoidBurnPointDTO bean = null;
+        try {
+            bean = gson.fromJson(data, VoidBurnPointDTO.class);
+        } catch (JsonSyntaxException e) {
+        }
         if (bean == null) {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
@@ -571,7 +596,11 @@ public class ServiceController {
         String data = TaskPost.sendGet(apiUri);
         // logic
         Gson gson = new GsonBuilder().create();
-        CampaignDTO bean = gson.fromJson(data, CampaignDTO.class);
+        CampaignDTO bean = null;
+        try {
+            bean = gson.fromJson(data, CampaignDTO.class);
+        } catch (JsonSyntaxException e) {
+        }
         if (bean == null) {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
@@ -612,7 +641,11 @@ public class ServiceController {
 
         String data = TaskPost.sendPost(json, apiUri);
         // logic
-        PaymentDTO bean = gson.fromJson(data, PaymentDTO.class);
+        PaymentDTO bean = null;
+        try {
+            bean = gson.fromJson(data, PaymentDTO.class);
+        } catch (JsonSyntaxException e) {
+        }
         if (bean == null) {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
@@ -644,7 +677,11 @@ public class ServiceController {
 
         String data = TaskPost.sendPost(json, apiUri);
         // logic
-        VoidPaymentDTO bean = gson.fromJson(data, VoidPaymentDTO.class);
+        VoidPaymentDTO bean = null;
+        try {
+            bean = gson.fromJson(data, VoidPaymentDTO.class);
+        } catch (JsonSyntaxException e) {
+        }
         if (bean == null) {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
@@ -802,7 +839,7 @@ public class ServiceController {
                     + "serial_no, act_code) "
                     + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
                     + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '" + bean.getTerminalId() + "', "
-                    + "'" + bean.getSerialNumber()+ "', '" + bean.getActivationCode() + "')";
+                    + "'" + bean.getSerialNumber() + "', '" + bean.getActivationCode() + "')";
             stmt.executeUpdate(sql);
             myConn.commit();
         } catch (ClassNotFoundException | SQLException e) {
@@ -1037,6 +1074,53 @@ public class ServiceController {
     }
 
     private void insertServiceResponse(VoidPaymentDTO bean, String json, String reqId, String status) throws Exception {
+        String sql;
+        Connection myConn = null;
+        Statement stmt = null;
+
+        try {
+            Class.forName(DBConstant.CLASS_NAME);
+            myConn = DriverManager.getConnection(DBConstant.DRIVER, DBConstant.USERNAME, DBConstant.PASSWORD);
+            myConn.setAutoCommit(false);
+            stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            //create new response
+            String resId = getUUID();
+            sql = "insert into service_res"
+                    + "(uid, req_id, res_data,res_status, res_datetime,"
+                    + "brand_id, branch_id, terminal_id, "
+                    + "true_you_id, pay_trac_id, pay_bat_id, "
+                    + "pay_tran_ref_id, pay_tran_date, pay_amt, "
+                    + "pay_curr, pay_code, pay_method, "
+                    + "true_you_id, acc_type, acc_value, "
+                    + "tran_type, camp_name, point_str) "
+                    + "values("
+                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
+                    + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '" + bean.getTerminalId() + "', "
+                    + "'" + bean.getTrueYouId() + "', '" + bean.getPayment().getTraceId() + "', '" + bean.getPayment().getBatchId() + "', "
+                    + "'" + bean.getPayment().getTransactionReferenceId() + "', '" + bean.getPayment().getTransactionDate() + "', '" + bean.getPayment().getAmount() + "', "
+                    + "'" + bean.getPayment().getCurrency() + "', '" + bean.getPayment().getCode() + "', '" + bean.getPayment().getMethod() + "', "
+                    + "'" + bean.getTrueYouId() + "', '" + bean.getAccount().getType() + "', '" + bean.getAccount().getValue() + "', "
+                    + "'" + bean.getTransactionType() + "', '" + bean.getCampaign().getName() + "', '" + bean.getPoint() + "')";
+            stmt.executeUpdate(sql);
+            myConn.commit();
+        } catch (ClassNotFoundException | SQLException e) {
+            JOptionPane.showMessageDialog(null, "SQL Error: \n" + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            throw e;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (myConn != null) {
+                    myConn.close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+    }
+
+    private void insertServiceResponse(VoidEarnPointDTO bean, String json, String reqId, String status) throws Exception {
         String sql;
         Connection myConn = null;
         Statement stmt = null;

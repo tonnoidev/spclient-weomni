@@ -1,6 +1,8 @@
 package th.co.softpos.ws.dto;
 
 import th.co.softpos.ws.model.Account;
+import th.co.softpos.ws.model.Campaign;
+import th.co.softpos.ws.model.Payment;
 import th.co.softpos.ws.model.Transaction;
 
 /*
@@ -79,6 +81,10 @@ public class VoidEarnPointDTO {
     private Transaction transaction;
     private String trueYouId;
     private Account account;
+    private Payment payment;
+    private String transactionType;
+    private Campaign campaign;
+    private String point;
 
     public String getBrandId() {
         return brandId;
@@ -126,6 +132,38 @@ public class VoidEarnPointDTO {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public Campaign getCampaign() {
+        return campaign;
+    }
+
+    public void setCampaign(Campaign campaign) {
+        this.campaign = campaign;
+    }
+
+    public String getPoint() {
+        return point;
+    }
+
+    public void setPoint(String point) {
+        this.point = point;
     }
 
     @Override
