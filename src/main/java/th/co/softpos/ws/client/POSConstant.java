@@ -7,8 +7,9 @@ public class POSConstant {
     public static String ACCESS_TOKEN;
     public static String APP_ID;
     
-    public static final int TIMEOUT = 5000;
-    public static final int SCHEDULE_TASK = 10000;
+    public static final int WAIT_FOR_TIMEOUT = 3;
+    public static final int TIMEOUT = 3000 * WAIT_FOR_TIMEOUT;
+    public static final int SCHEDULE_TASK = 5000;
 
     // services trigger
     // List all Activate TRIGGER

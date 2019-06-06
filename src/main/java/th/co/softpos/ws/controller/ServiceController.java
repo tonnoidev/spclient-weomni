@@ -383,6 +383,9 @@ public class ServiceController {
         } else {
             updateServiceRequest(req.getUid(), WSConstants.FINISH, reqId);
             insertServiceResponse(bean, data, reqId, WSConstants.FINISH);
+
+            // write config file
+            saveActivateConfig(bean);
         }
     }
 
@@ -737,7 +740,7 @@ public class ServiceController {
             stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             if (oldReqId == null) {
                 reqId = getUUID();
-            }else{
+            } else {
                 reqId = oldReqId;
             }
             sql = "update service_req "
@@ -1262,6 +1265,43 @@ public class ServiceController {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "SQL Error: \n" + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
             logger.error(e.getMessage());
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (myConn != null) {
+                    myConn.close();
+                }
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
+
+    private void saveActivateConfig(ActivateDTO bean) throws Exception {
+        String sql;
+        Connection myConn = null;
+        Statement stmt = null;
+
+        try {
+            Class.forName(DBConstant.CLASS_NAME);
+            myConn = DriverManager.getConnection(DBConstant.DRIVER, DBConstant.USERNAME, DBConstant.PASSWORD);
+            myConn.setAutoCommit(false);
+            stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            // create activation config
+            sql = "insert into service_activate "
+                    + "(brand_id, branch_id, terminal_id, serial_number, activation_code) "
+                    + "values("
+                    + "'"+bean.getBrandId()+"', '"+bean.getBranchId()+"', '"+bean.getTerminalId()+"', "
+                    + "'"+bean.getSerialNumber()+"', '"+bean.getActivationCode()+"')";
+            stmt.executeUpdate(sql);
+            myConn.commit();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "SQL Error: \n" + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            logger.error(e.getMessage());
+            throw e;
         } finally {
             try {
                 if (stmt != null) {

@@ -90,7 +90,8 @@ public class TaskPost {
                 json = response.toString();
             } else {
                 json = getStreamStr(con.getErrorStream());
-
+                String resMsg = con.getResponseMessage();
+                System.out.println(resMsg);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
