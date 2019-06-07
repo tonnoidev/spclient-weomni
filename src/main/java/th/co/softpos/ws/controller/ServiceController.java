@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 import th.co.softpos.db.model.ServiceDocs;
@@ -52,6 +53,7 @@ import th.co.softpos.ws.model.Content;
 import th.co.softpos.ws.model.Customer;
 import th.co.softpos.ws.model.Pockets;
 import th.co.softpos.ws.model.Point;
+import th.co.softpos.ws.model.ServiceActivate;
 import th.co.softpos.ws.model.SlipType;
 import th.co.softpos.ws.model.Transaction;
 import th.co.softpos.ws.model.req.Payment;
@@ -61,6 +63,7 @@ import th.co.softpos.ws.util.ThaiUtil;
 public class ServiceController {
 
     private static Logger logger = Logger.getLogger(ServiceController.class);
+    private static ServiceActivate service_db = new ServiceActivate();
 
     static {
         Properties prop = new Properties();
@@ -82,6 +85,12 @@ public class ServiceController {
                 } catch (IOException e) {
                 }
             }
+        }
+        
+        try {
+            service_db = getActivateConfig();
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(ServiceController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -392,6 +401,9 @@ public class ServiceController {
     public void processPostCreateRedeemCampaign(String apiUri, ServiceReq req, Gson gson) throws Exception {
         String reqId = updateServiceRequest(req.getUid(), WSConstants.WAIT, null);
         req.setReqId(reqId);
+        req.setBranchId(service_db.getBranchId());
+        req.setBrandId(service_db.getBrandId());
+        req.setParamTerminalId(service_db.getTerminalId());
 
         CreateRedeemCampaignDTO reqBean = new CreateRedeemCampaignDTO();
         reqBean.setBrandId(req.getBrandId());
@@ -429,6 +441,9 @@ public class ServiceController {
     public void processPostCreateRedeemCode(String apiUri, ServiceReq req, Gson gson) throws Exception {
         String reqId = updateServiceRequest(req.getUid(), WSConstants.WAIT, null);
         req.setReqId(reqId);
+        req.setBranchId(service_db.getBranchId());
+        req.setBrandId(service_db.getBrandId());
+        req.setParamTerminalId(service_db.getTerminalId());
 
         CreateRedeemCodeDTO reqBean = new CreateRedeemCodeDTO();
         reqBean.setBrandId(req.getBrandId());
@@ -467,6 +482,9 @@ public class ServiceController {
     public void processPostCreateEarnPoint(String apiUri, ServiceReq req, Gson gson) throws Exception {
         String reqId = updateServiceRequest(req.getUid(), WSConstants.WAIT, null);
         req.setReqId(reqId);
+        req.setBranchId(service_db.getBranchId());
+        req.setBrandId(service_db.getBrandId());
+        req.setParamTerminalId(service_db.getTerminalId());
 
         CreateEarnPointDTO reqBean = new CreateEarnPointDTO();
         reqBean.setBrandId(req.getBrandId());
@@ -504,6 +522,9 @@ public class ServiceController {
     public void processGetPrivilegeTrueYouCard(String apiUri, ServiceReq req) throws Exception {
         String reqId = updateServiceRequest(req.getUid(), WSConstants.WAIT, null);
         req.setReqId(reqId);
+        req.setBranchId(service_db.getBranchId());
+        req.setBrandId(service_db.getBrandId());
+        req.setParamTerminalId(service_db.getTerminalId());
 
         apiUri = SPUtil.parseUriFormat(apiUri, new String[]{
             req.getParamTerminalId(),
@@ -535,6 +556,9 @@ public class ServiceController {
     public void processPostVoidEarnPoint(String apiUri, ServiceReq req, Gson gson) throws Exception {
         String reqId = updateServiceRequest(req.getUid(), WSConstants.WAIT, null);
         req.setReqId(reqId);
+        req.setBranchId(service_db.getBranchId());
+        req.setBrandId(service_db.getBrandId());
+        req.setParamTerminalId(service_db.getTerminalId());
 
         CreateVoidEarnPointDTO reqBean = new CreateVoidEarnPointDTO();
         reqBean.setBrandId(req.getBrandId());
@@ -572,6 +596,9 @@ public class ServiceController {
     public void processPostVoidBurnPoint(String apiUri, ServiceReq req, Gson gson) throws Exception {
         String reqId = updateServiceRequest(req.getUid(), WSConstants.WAIT, null);
         req.setReqId(reqId);
+        req.setBranchId(service_db.getBranchId());
+        req.setBrandId(service_db.getBrandId());
+        req.setParamTerminalId(service_db.getTerminalId());
 
         CreateVoidBurnPointDTO reqBean = new CreateVoidBurnPointDTO();
         reqBean.setBrandId(req.getBrandId());
@@ -609,6 +636,9 @@ public class ServiceController {
     public void processGetCampaign(String apiUri, ServiceReq req) throws Exception {
         String reqId = updateServiceRequest(req.getUid(), WSConstants.WAIT, null);
         req.setReqId(reqId);
+        req.setBranchId(service_db.getBranchId());
+        req.setBrandId(service_db.getBrandId());
+        req.setParamTerminalId(service_db.getTerminalId());
 
         apiUri = SPUtil.parseUriFormat(apiUri, new String[]{
             req.getParamTerminalId(),
@@ -640,6 +670,9 @@ public class ServiceController {
     public void processPostCreatePayment(String apiUri, ServiceReq req, Gson gson) throws Exception {
         String reqId = updateServiceRequest(req.getUid(), WSConstants.WAIT, null);
         req.setReqId(reqId);
+        req.setBranchId(service_db.getBranchId());
+        req.setBrandId(service_db.getBrandId());
+        req.setParamTerminalId(service_db.getTerminalId());
 
         CreatePaymentDTO reqBean = new CreatePaymentDTO();
         reqBean.setBrandId(req.getBrandId());
@@ -684,6 +717,9 @@ public class ServiceController {
     public void processPostVoidPayment(String apiUri, ServiceReq req, Gson gson) throws Exception {
         String reqId = updateServiceRequest(req.getUid(), WSConstants.WAIT, null);
         req.setReqId(reqId);
+        req.setBranchId(service_db.getBranchId());
+        req.setBrandId(service_db.getBrandId());
+        req.setParamTerminalId(service_db.getTerminalId());
 
         CreateVoidPaymentDTO reqBean = new CreateVoidPaymentDTO();
         reqBean.setBrandId(req.getBrandId());
@@ -1283,6 +1319,11 @@ public class ServiceController {
         String sql;
         Connection myConn = null;
         Statement stmt = null;
+        
+        //validate
+        if(bean.getBranchId()==null){
+            return;
+        }
 
         try {
             Class.forName(DBConstant.CLASS_NAME);
@@ -1314,5 +1355,46 @@ public class ServiceController {
                 logger.error(e.getMessage());
             }
         }
+    }
+    
+    private static ServiceActivate getActivateConfig() throws Exception {
+        String sql;
+        Connection myConn = null;
+        Statement stmt = null;
+        ServiceActivate bean = new ServiceActivate();
+
+        try {
+            Class.forName(DBConstant.CLASS_NAME);
+            myConn = DriverManager.getConnection(DBConstant.DRIVER, DBConstant.USERNAME, DBConstant.PASSWORD);
+            stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            // create activation config
+            sql = "select * from service_activate where 1=1 limit 0,1";
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                bean.setBrandId(rs.getString("brand_id"));
+                bean.setBranchId(rs.getString("branch_id"));
+                bean.setTerminalId(rs.getString("terminal_id"));
+                bean.setSerialNumber(rs.getString("serial_number"));
+                bean.setActivationCode(rs.getString("activation_code"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "SQL Error: \n" + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            logger.error(e.getMessage());
+            throw e;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (myConn != null) {
+                    myConn.close();
+                }
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            }
+        }
+        
+        return bean;
     }
 }
