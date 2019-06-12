@@ -673,6 +673,44 @@ public class ServiceController {
         req.setBranchId(service_db.getBranchId());
         req.setBrandId(service_db.getBrandId());
         req.setParamTerminalId(service_db.getTerminalId());
+        
+        PaymentDTO beanErr = new PaymentDTO();
+        beanErr.setBranchId(req.getBranchId());
+        beanErr.setBrandId(req.getBrandId());
+        beanErr.setTerminalId(req.getParamTerminalId());
+        th.co.softpos.ws.model.Payment paymentErr = new th.co.softpos.ws.model.Payment();
+        paymentErr.setTransactionDate(SPUtil.formatDbCurrent());
+        paymentErr.setAmount("0");
+        beanErr.setPayment(paymentErr);
+        
+        if(!checkActivateTerminal(service_db)){
+            updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);            
+            insertServiceResponse(beanErr, "Service not activate", reqId, WSConstants.ERROR);
+            return;
+        }
+        
+        String msgErr = "";
+        if(req.getPaymentAmount()==null||req.getPaymentAmount().intValue()<=0){   
+            msgErr += "Payment amount not found or must be more 0, ";
+        }else if(req.getPaymentCode()==null){
+            msgErr += "Payment code not found, ";
+        }
+        
+        if(!"".equals(msgErr)){
+            updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);            
+            insertServiceResponse(beanErr, msgErr, reqId, WSConstants.ERROR);
+            return;
+        }
+        
+        if(req.getPaymentCurrency()==null){
+            req.setPaymentCurrency("THB");
+        }
+        if(req.getPaymentMethod()==null){
+            req.setPaymentMethod("WALLET");
+        }
+        if(req.getExternal()==null){
+            req.setExternal("false");
+        }
 
         CreatePaymentDTO reqBean = new CreatePaymentDTO();
         reqBean.setBrandId(req.getBrandId());
@@ -705,8 +743,10 @@ public class ServiceController {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
                 updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);
+                insertServiceResponse(beanErr, errors.getMesssage(), reqId, WSConstants.ERROR);
             } else {
                 updateServiceRequest(req.getUid(), WSConstants.NOT_FOUND, reqId);
+                insertServiceResponse(beanErr, "not found data", reqId, WSConstants.NOT_FOUND);
             }
         } else {
             updateServiceRequest(req.getUid(), WSConstants.FINISH, reqId);
@@ -720,6 +760,37 @@ public class ServiceController {
         req.setBranchId(service_db.getBranchId());
         req.setBrandId(service_db.getBrandId());
         req.setParamTerminalId(service_db.getTerminalId());
+        
+        VoidPaymentDTO beanErr = new VoidPaymentDTO();
+        th.co.softpos.ws.model.Payment paymentErr = new th.co.softpos.ws.model.Payment();
+        paymentErr.setTransactionDate(SPUtil.formatDbCurrent());
+        paymentErr.setAmount("0");
+        beanErr.setPayment(paymentErr);
+        beanErr.setAccount(new Account(null, null));
+        Campaign campaignErr = new Campaign();
+        campaignErr.setLastModifiedDate(SPUtil.formatDbCurrent());
+        beanErr.setCampaign(campaignErr);
+        
+        if(!checkActivateTerminal(service_db)){
+            updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);            
+            insertServiceResponse(beanErr, "Service not activate", reqId, WSConstants.ERROR);
+            return;
+        }
+        
+        String msgErr = "";
+        if(req.getParamTraceId()==null){   
+            msgErr += "Trace id not found, ";
+        }
+        
+        if(!"".equals(msgErr)){
+            updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);            
+            insertServiceResponse(beanErr, msgErr, reqId, WSConstants.ERROR);
+            return;
+        }
+        
+        if(req.getExternal()==null){
+            req.setExternal("false");
+        }
 
         CreateVoidPaymentDTO reqBean = new CreateVoidPaymentDTO();
         reqBean.setBrandId(req.getBrandId());
@@ -745,8 +816,10 @@ public class ServiceController {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
                 updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);
+                insertServiceResponse(beanErr, errors.getMesssage(), reqId, WSConstants.ERROR);
             } else {
                 updateServiceRequest(req.getUid(), WSConstants.NOT_FOUND, reqId);
+                insertServiceResponse(beanErr, "not found data", reqId, WSConstants.NOT_FOUND);
             }
         } else {
             updateServiceRequest(req.getUid(), WSConstants.FINISH, reqId);
@@ -1200,7 +1273,7 @@ public class ServiceController {
                     + "true_you_id, pay_trac_id, pay_bat_id, "
                     + "pay_tran_ref_id, pay_tran_date, pay_amt, "
                     + "pay_curr, pay_code, pay_method, "
-                    + "true_you_id, acc_type, acc_value, "
+                    + "acc_type, acc_value, "
                     + "tran_type, camp_name, point_str) "
                     + "values("
                     + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
@@ -1208,7 +1281,7 @@ public class ServiceController {
                     + "'" + bean.getTrueYouId() + "', '" + payment.getTraceId() + "', '" + payment.getBatchId() + "', "
                     + "'" + payment.getTransactionReferenceId() + "', '" + payment.getTransactionDate() + "', '" + payment.getAmount() + "', "
                     + "'" + payment.getCurrency() + "', '" + payment.getCode() + "', '" + payment.getMethod() + "', "
-                    + "'" + bean.getTrueYouId() + "', '" + bean.getAccount().getType() + "', '" + bean.getAccount().getValue() + "', "
+                    + "'" + bean.getAccount().getType() + "', '" + bean.getAccount().getValue() + "', "
                     + "'" + bean.getTransactionType() + "', '" + bean.getCampaign().getName() + "', '" + bean.getPoint() + "')";
             stmt.executeUpdate(sql);
             myConn.commit();
@@ -1396,5 +1469,13 @@ public class ServiceController {
         }
         
         return bean;
+    }
+
+    private boolean checkActivateTerminal(ServiceActivate bean) {
+        if(bean.getBranchId()==null||bean.getBrandId()==null||bean.getTerminalId()==null){
+            return false;
+        }
+        
+        return true;
     }
 }

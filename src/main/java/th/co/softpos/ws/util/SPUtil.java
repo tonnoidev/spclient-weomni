@@ -1,6 +1,8 @@
 package th.co.softpos.ws.util;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SPUtil {
 
@@ -31,6 +33,11 @@ public class SPUtil {
             return 0;
         }
         return amount.intValue() * 100;
+    }
+    
+    public static String formatDbCurrent(){
+        SimpleDateFormat simp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simp.format(new Date());
     }
 
 }

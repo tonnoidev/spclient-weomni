@@ -42,7 +42,11 @@ public class ServicesTask extends TimerTask {
                         apiUri = WSConstants.MAP_SERVICES.get(WSConstants.API_NAMES[i]).toString();
                         switch (i) {
                             case 0: {
-                                service.processPostActivate(apiUri, req, gson);
+                                try {
+                                 service.processPostActivate(apiUri, req, gson);   
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Activate Error : "+e.getMessage());
+                                }                                
                                 break;
                             }
                             case 1: {
@@ -74,11 +78,19 @@ public class ServicesTask extends TimerTask {
                                 break;
                             }
                             case 8: {
-                                service.processPostCreatePayment(apiUri, req, gson);
+                                try {
+                                    service.processPostCreatePayment(apiUri, req, gson);    
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Payment Error : "+e.getMessage());
+                                }                                
                                 break;
                             }
                             case 9: {
-                                service.processPostVoidPayment(apiUri, req, gson);
+                                try {
+                                 service.processPostVoidPayment(apiUri, req, gson);   
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Void Payment Error : "+e.getMessage());
+                                }                                
                                 break;
                             }
                             case 10: {
