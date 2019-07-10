@@ -405,16 +405,16 @@ public class ServiceController {
         req.setBrandId(service_db.getBrandId());
         req.setParamTerminalId(service_db.getTerminalId());
 
-        CreateRedeemCampaignDTO reqBean = new CreateRedeemCampaignDTO();
-        reqBean.setBrandId(req.getBrandId());
-        reqBean.setBranchId(req.getBranchId());
-        reqBean.setCampaignCode(req.getCampaignCode());
-        reqBean.setAccount(new Account(req.getAccountType(), req.getAccountValue()));
-        reqBean.setExternal(req.getExternal().equalsIgnoreCase("true"));
+        CreateRedeemCampaignDTO beanErr = new CreateRedeemCampaignDTO();
+        beanErr.setBrandId(req.getBrandId());
+        beanErr.setBranchId(req.getBranchId());
+        beanErr.setCampaignCode(req.getCampaignCode());
+        beanErr.setAccount(new Account(req.getAccountType(), req.getAccountValue()));
+        beanErr.setExternal(req.getExternal().equalsIgnoreCase("true"));
 
         Type type = new TypeToken<CreateRedeemCampaignDTO>() {
         }.getType();
-        String json = gson.toJson(reqBean, type);
+        String json = gson.toJson(beanErr, type);
 
         apiUri = SPUtil.parseUriFormat(apiUri, new String[]{req.getParamTerminalId()});
 
@@ -429,8 +429,10 @@ public class ServiceController {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
                 updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);
+                insertServiceResponse(beanErr, errors.getMesssage(), reqId, WSConstants.ERROR);
             } else {
                 updateServiceRequest(req.getUid(), WSConstants.NOT_FOUND, reqId);
+                insertServiceResponse(beanErr, "not found data", reqId, WSConstants.NOT_FOUND);
             }
         } else {
             updateServiceRequest(req.getUid(), WSConstants.FINISH, reqId);
@@ -445,16 +447,16 @@ public class ServiceController {
         req.setBrandId(service_db.getBrandId());
         req.setParamTerminalId(service_db.getTerminalId());
 
-        CreateRedeemCodeDTO reqBean = new CreateRedeemCodeDTO();
-        reqBean.setBrandId(req.getBrandId());
-        reqBean.setBranchId(req.getBranchId());
-        reqBean.setCampaignCode(req.getCampaignCode());
-        reqBean.setRewardCode(req.getRewardCode());
-        reqBean.setExternal(req.getExternal().equalsIgnoreCase("true"));
+        CreateRedeemCodeDTO beanErr = new CreateRedeemCodeDTO();
+        beanErr.setBrandId(req.getBrandId());
+        beanErr.setBranchId(req.getBranchId());
+        beanErr.setCampaignCode(req.getCampaignCode());
+        beanErr.setRewardCode(req.getRewardCode());
+        beanErr.setExternal(req.getExternal().equalsIgnoreCase("true"));
 
         Type type = new TypeToken<CreateRedeemCodeDTO>() {
         }.getType();
-        String json = gson.toJson(reqBean, type);
+        String json = gson.toJson(beanErr, type);
 
         apiUri = SPUtil.parseUriFormat(apiUri, new String[]{req.getParamTerminalId()});
 
@@ -470,8 +472,10 @@ public class ServiceController {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
                 updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);
+                insertServiceResponse(beanErr, data, reqId, WSConstants.ERROR);
             } else {
                 updateServiceRequest(req.getUid(), WSConstants.NOT_FOUND, reqId);
+                insertServiceResponse(beanErr, data, reqId, WSConstants.NOT_FOUND);
             }
         } else {
             updateServiceRequest(req.getUid(), WSConstants.FINISH, reqId);
@@ -486,16 +490,16 @@ public class ServiceController {
         req.setBrandId(service_db.getBrandId());
         req.setParamTerminalId(service_db.getTerminalId());
 
-        CreateEarnPointDTO reqBean = new CreateEarnPointDTO();
-        reqBean.setBrandId(req.getBrandId());
-        reqBean.setBranchId(req.getBranchId());
-        reqBean.setAccount(new Account(req.getAccountType(), req.getAccountValue()));
-        reqBean.setAmount(SPUtil.parseAmout100(req.getEarnPointAmount()));
-        reqBean.setExternal(req.getExternal().equalsIgnoreCase("true"));
+        CreateEarnPointDTO beanErr = new CreateEarnPointDTO();
+        beanErr.setBrandId(req.getBrandId());
+        beanErr.setBranchId(req.getBranchId());
+        beanErr.setAccount(new Account(req.getAccountType(), req.getAccountValue()));
+        beanErr.setAmount(SPUtil.parseAmout100(req.getEarnPointAmount()));
+        beanErr.setExternal(req.getExternal().equalsIgnoreCase("true"));
 
         Type type = new TypeToken<CreateEarnPointDTO>() {
         }.getType();
-        String json = gson.toJson(reqBean, type);
+        String json = gson.toJson(beanErr, type);
 
         apiUri = SPUtil.parseUriFormat(apiUri, new String[]{req.getParamTerminalId()});
 
@@ -510,8 +514,10 @@ public class ServiceController {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
                 updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);
+                insertServiceResponse(beanErr, data, reqId, WSConstants.ERROR);
             } else {
                 updateServiceRequest(req.getUid(), WSConstants.NOT_FOUND, reqId);
+                insertServiceResponse(beanErr, data, reqId, WSConstants.NOT_FOUND);
             }
         } else {
             updateServiceRequest(req.getUid(), WSConstants.FINISH, reqId);
@@ -560,14 +566,14 @@ public class ServiceController {
         req.setBrandId(service_db.getBrandId());
         req.setParamTerminalId(service_db.getTerminalId());
 
-        CreateVoidEarnPointDTO reqBean = new CreateVoidEarnPointDTO();
-        reqBean.setBrandId(req.getBrandId());
-        reqBean.setBranchId(req.getBranchId());
-        reqBean.setExternal(req.getExternal().equalsIgnoreCase("true"));
+        CreateVoidEarnPointDTO beanErr = new CreateVoidEarnPointDTO();
+        beanErr.setBrandId(req.getBrandId());
+        beanErr.setBranchId(req.getBranchId());
+        beanErr.setExternal(req.getExternal().equalsIgnoreCase("true"));
 
         Type type = new TypeToken<CreateVoidEarnPointDTO>() {
         }.getType();
-        String json = gson.toJson(reqBean, type);
+        String json = gson.toJson(beanErr, type);
 
         apiUri = SPUtil.parseUriFormat(apiUri, new String[]{
             req.getParamTerminalId(), req.getParamTraceId()
@@ -584,8 +590,10 @@ public class ServiceController {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
                 updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);
+                insertServiceResponse(beanErr, data, reqId, WSConstants.ERROR);
             } else {
                 updateServiceRequest(req.getUid(), WSConstants.NOT_FOUND, reqId);
+                insertServiceResponse(beanErr, data, reqId, WSConstants.NOT_FOUND);
             }
         } else {
             updateServiceRequest(req.getUid(), WSConstants.FINISH, reqId);
@@ -600,14 +608,14 @@ public class ServiceController {
         req.setBrandId(service_db.getBrandId());
         req.setParamTerminalId(service_db.getTerminalId());
 
-        CreateVoidBurnPointDTO reqBean = new CreateVoidBurnPointDTO();
-        reqBean.setBrandId(req.getBrandId());
-        reqBean.setBranchId(req.getBranchId());
-        reqBean.setExternal(req.getExternal().equalsIgnoreCase("true"));
+        CreateVoidBurnPointDTO beanErr = new CreateVoidBurnPointDTO();
+        beanErr.setBrandId(req.getBrandId());
+        beanErr.setBranchId(req.getBranchId());
+        beanErr.setExternal(req.getExternal().equalsIgnoreCase("true"));
 
         Type type = new TypeToken<CreateVoidBurnPointDTO>() {
         }.getType();
-        String json = gson.toJson(reqBean, type);
+        String json = gson.toJson(beanErr, type);
 
         apiUri = SPUtil.parseUriFormat(apiUri, new String[]{
             req.getParamTerminalId(), req.getParamTraceId()
@@ -624,8 +632,10 @@ public class ServiceController {
             ErrorArrayDTO errors = getErrorFromData(data, gson);
             if (errors != null) {
                 updateServiceRequest(req.getUid(), WSConstants.ERROR, reqId);
+                insertServiceResponse(beanErr, data, reqId, WSConstants.ERROR);
             } else {
                 updateServiceRequest(req.getUid(), WSConstants.NOT_FOUND, reqId);
+                insertServiceResponse(beanErr, data, reqId, WSConstants.NOT_FOUND);
             }
         } else {
             updateServiceRequest(req.getUid(), WSConstants.FINISH, reqId);
@@ -1068,6 +1078,52 @@ public class ServiceController {
         }
     }
 
+    private void insertServiceResponse(CreateRedeemCampaignDTO bean, String json, String reqId, String status) throws Exception {
+        String sql;
+        Connection myConn = null;
+        Statement stmt = null;
+
+        try {
+            Class.forName(DBConstant.CLASS_NAME);
+            myConn = DriverManager.getConnection(DBConstant.DRIVER, DBConstant.USERNAME, DBConstant.PASSWORD);
+            myConn.setAutoCommit(false);
+            stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            //create new response
+            String resId = getUUID();
+            Transaction trans = new Transaction();
+            Customer cust = new Customer();
+            sql = "insert into service_res"
+                    + "(uid, req_id, res_data,res_status, res_datetime,"
+                    + "brand_id, branch_id, terminal_id, "
+                    + "true_you_id, tran_trac_id, tran_bat_id, "
+                    + "tran_ref_id, tran_date, cust_ref_id, "
+                    + "cust_point_used, cust_point_balance) "
+                    + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
+                    + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '', "
+                    + "'', '" + trans.getTraceId() + "', '" + trans.getBatchId() + "',  "
+                    + "'" + trans.getTransactionReferenceId() + "', '" + trans.getTransactionDate() + "', '" + cust.getCustomerReferenceId() + "', "
+                    + "'" + cust.getPointUsed() + "', '" + cust.getPointBalance() + "')";
+            stmt.executeUpdate(sql);
+            myConn.commit();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "SQL Error: \n" + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            logger.error(e.getMessage());
+            throw e;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (myConn != null) {
+                    myConn.close();
+                }
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
+    
     private void insertServiceResponse(RedeemCodeDTO bean, String json, String reqId, String status) throws Exception {
         String sql;
         Connection myConn = null;
@@ -1090,6 +1146,49 @@ public class ServiceController {
                     + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
                     + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '" + bean.getTerminalId() + "', "
                     + "'" + bean.getTrueYouId() + "', '" + trans.getTraceId() + "', '" + trans.getBatchId() + "',  "
+                    + "'" + trans.getTransactionReferenceId() + "', '" + trans.getTransactionDate() + "', '" + bean.getRewardCode() + "')";
+            stmt.executeUpdate(sql);
+            myConn.commit();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "SQL Error: \n" + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            logger.error(e.getMessage());
+            throw e;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (myConn != null) {
+                    myConn.close();
+                }
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
+    
+    private void insertServiceResponse(CreateRedeemCodeDTO bean, String json, String reqId, String status) throws Exception {
+        String sql;
+        Connection myConn = null;
+        Statement stmt = null;
+
+        try {
+            Class.forName(DBConstant.CLASS_NAME);
+            myConn = DriverManager.getConnection(DBConstant.DRIVER, DBConstant.USERNAME, DBConstant.PASSWORD);
+            myConn.setAutoCommit(false);
+            stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            //create new response
+            String resId = getUUID();
+            Transaction trans = new Transaction();
+            sql = "insert into service_res"
+                    + "(uid, req_id, res_data,res_status, res_datetime,"
+                    + "brand_id, branch_id, terminal_id, "
+                    + "true_you_id, tran_trac_id, tran_bat_id, "
+                    + "tran_ref_id, tran_date, rew_code) "
+                    + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
+                    + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '', "
+                    + "'', '" + trans.getTraceId() + "', '" + trans.getBatchId() + "',  "
                     + "'" + trans.getTransactionReferenceId() + "', '" + trans.getTransactionDate() + "', '" + bean.getRewardCode() + "')";
             stmt.executeUpdate(sql);
             myConn.commit();
@@ -1157,6 +1256,53 @@ public class ServiceController {
             }
         }
     }
+    
+    private void insertServiceResponse(CreateEarnPointDTO bean, String json, String reqId, String status) throws Exception {
+        String sql;
+        Connection myConn = null;
+        Statement stmt = null;
+
+        try {
+            Class.forName(DBConstant.CLASS_NAME);
+            myConn = DriverManager.getConnection(DBConstant.DRIVER, DBConstant.USERNAME, DBConstant.PASSWORD);
+            myConn.setAutoCommit(false);
+            stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            //create new response
+            String resId = getUUID();
+            Transaction trans = new Transaction();
+            sql = "insert into service_res"
+                    + "(uid, req_id, res_data,res_status, res_datetime,"
+                    + "brand_id, branch_id, terminal_id, "
+                    + "true_you_id, tran_trac_id, tran_bat_id, "
+                    + "tran_ref_id, tran_date, "
+                    + "acc_type, acc_value, "
+                    + "tran_point, tran_amt) "
+                    + "values('" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
+                    + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '', "
+                    + "'', '" + trans.getTraceId() + "', '" + trans.getBatchId() + "',  "
+                    + "'" + trans.getTransactionReferenceId() + "', '" + trans.getTransactionDate() + "', "
+                    + "'" + bean.getAccount().getType() + "', '" + bean.getAccount().getValue() + "', "
+                    + "'" + trans.getPoints() + "', '" + trans.getAmount() + "')";
+            stmt.executeUpdate(sql);
+            myConn.commit();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "SQL Error: \n" + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            logger.error(e.getMessage());
+            throw e;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (myConn != null) {
+                    myConn.close();
+                }
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
 
     private void insertServiceResponse(VoidBurnPointDTO bean, String json, String reqId, String status) throws Exception {
         String sql;
@@ -1188,6 +1334,56 @@ public class ServiceController {
                     + "'" + payment.getTransactionReferenceId() + "', '" + payment.getTransactionDate() + "', '" + payment.getAmount() + "', "
                     + "'" + payment.getCurrency() + "', '" + payment.getCode() + "', '" + payment.getMethod() + "', "
                     + "'" + bean.getCampaign().getName() + "', '" + bean.getPoint() + "')";
+            stmt.executeUpdate(sql);
+            myConn.commit();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "SQL Error: \n" + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            logger.error(e.getMessage());
+            throw e;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (myConn != null) {
+                    myConn.close();
+                }
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
+    
+    private void insertServiceResponse(CreateVoidBurnPointDTO bean, String json, String reqId, String status) throws Exception {
+        String sql;
+        Connection myConn = null;
+        Statement stmt = null;
+
+        try {
+            Class.forName(DBConstant.CLASS_NAME);
+            myConn = DriverManager.getConnection(DBConstant.DRIVER, DBConstant.USERNAME, DBConstant.PASSWORD);
+            myConn.setAutoCommit(false);
+            stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            //create new response
+            String resId = getUUID();
+            th.co.softpos.ws.model.Payment payment = new th.co.softpos.ws.model.Payment();
+            sql = "insert into service_res"
+                    + "(uid, req_id, res_data,res_status, res_datetime,"
+                    + "brand_id, branch_id, terminal_id, "
+                    + "true_you_id, acc_type, acc_value, "
+                    + "tran_type, pay_trac_id, pay_bat_id, "
+                    + "pay_tran_ref_id, pay_tran_date, pay_amt, "
+                    + "pay_curr, pay_code, pay_method, "
+                    + "camp_name, point_str) "
+                    + "values("
+                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
+                    + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '', "
+                    + "'', '', '', "
+                    + "'', '" + payment.getTraceId() + "', '" + payment.getBatchId() + "', "
+                    + "'" + payment.getTransactionReferenceId() + "', '" + payment.getTransactionDate() + "', '" + payment.getAmount() + "', "
+                    + "'" + payment.getCurrency() + "', '" + payment.getCode() + "', '" + payment.getMethod() + "', "
+                    + "'', '')";
             stmt.executeUpdate(sql);
             myConn.commit();
         } catch (Exception e) {
@@ -1352,6 +1548,56 @@ public class ServiceController {
             }
         }
     }
+    
+    private void insertServiceResponse(CreateVoidEarnPointDTO bean, String json, String reqId, String status) throws Exception {
+        String sql;
+        Connection myConn = null;
+        Statement stmt = null;
+
+        try {
+            Class.forName(DBConstant.CLASS_NAME);
+            myConn = DriverManager.getConnection(DBConstant.DRIVER, DBConstant.USERNAME, DBConstant.PASSWORD);
+            myConn.setAutoCommit(false);
+            stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+            //create new response
+            String resId = getUUID();
+            th.co.softpos.ws.model.Payment payment = new th.co.softpos.ws.model.Payment();
+            sql = "insert into service_res"
+                    + "(uid, req_id, res_data,res_status, res_datetime,"
+                    + "brand_id, branch_id, terminal_id, "
+                    + "true_you_id, pay_trac_id, pay_bat_id, "
+                    + "pay_tran_ref_id, pay_tran_date, pay_amt, "
+                    + "pay_curr, pay_code, pay_method, "
+                    + "true_you_id, acc_type, acc_value, "
+                    + "tran_type, camp_name, point_str) "
+                    + "values("
+                    + "'" + resId + "', '" + reqId + "', '" + json + "', '" + status + "', now(),"
+                    + "'" + bean.getBrandId() + "', '" + bean.getBranchId() + "', '', "
+                    + "'', '" + payment.getTraceId() + "', '" + payment.getBatchId() + "', "
+                    + "'" + payment.getTransactionReferenceId() + "', '" + payment.getTransactionDate() + "', '" + payment.getAmount() + "', "
+                    + "'" + payment.getCurrency() + "', '" + payment.getCode() + "', '" + payment.getMethod() + "', "
+                    + "'', '', '', "
+                    + "'', '', '')";
+            stmt.executeUpdate(sql);
+            myConn.commit();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "SQL Error: \n" + e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+            logger.error(e.getMessage());
+            throw e;
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (myConn != null) {
+                    myConn.close();
+                }
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
 
     public void truncate(String reqId) {
         String sql;
@@ -1403,6 +1649,8 @@ public class ServiceController {
             myConn = DriverManager.getConnection(DBConstant.DRIVER, DBConstant.USERNAME, DBConstant.PASSWORD);
             myConn.setAutoCommit(false);
             stmt = myConn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            
+            stmt.executeUpdate("delete from service_activate");
 
             // create activation config
             sql = "insert into service_activate "

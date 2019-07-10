@@ -43,58 +43,90 @@ public class ServicesTask extends TimerTask {
                         switch (i) {
                             case 0: {
                                 try {
-                                 service.processPostActivate(apiUri, req, gson);   
+                                    service.processPostActivate(apiUri, req, gson);   
                                 } catch (Exception e) {
-                                    JOptionPane.showMessageDialog(null, "API Activate Error : "+e.getMessage());
-                                }                                
+                                    JOptionPane.showMessageDialog(null, "API Service Activate Error : "+e.getMessage());
+                                }
                                 break;
                             }
                             case 1: {
-                                service.processPostCreateRedeemCampaign(apiUri, req, gson);
+                                try {
+                                    service.processPostCreateRedeemCampaign(apiUri, req, gson);
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Service Create Redeem Campaign Error : "+e.getMessage());
+                                }
                                 break;
                             }
                             case 2: {
-                                service.processPostCreateRedeemCode(apiUri, req, gson);
+                                try {
+                                    service.processPostCreateRedeemCode(apiUri, req, gson);
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Service Create Redeem Code Error : "+e.getMessage());
+                                }
                                 break;
                             }
                             case 3: {
-                                service.processPostCreateEarnPoint(apiUri, req, gson);
+                                try {
+                                    service.processPostCreateEarnPoint(apiUri, req, gson);
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Service Create Earn Point Error : "+e.getMessage());
+                                }
                                 break;
                             }
                             case 4: {
-                                service.processGetPrivilegeTrueYouCard(apiUri, req);
+                                try {
+                                    service.processGetPrivilegeTrueYouCard(apiUri, req);
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Service Privilege TrueYouCard Error : "+e.getMessage());
+                                }
                                 break;
                             }
                             case 5: {
-                                service.processPostVoidEarnPoint(apiUri, req, gson);
+                                try {
+                                    service.processPostVoidEarnPoint(apiUri, req, gson);
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Service Void EarnPoint Error : "+e.getMessage());
+                                }
                                 break;
                             }
                             case 6: {
-                                service.processPostVoidBurnPoint(apiUri, req, gson);
+                                try {
+                                    service.processPostVoidBurnPoint(apiUri, req, gson);
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Service Void BurnPoint Error : "+e.getMessage());
+                                }
                                 break;
                             }
                             case 7: {
-                                service.processGetCampaign(apiUri, req);
+                                try {
+                                    service.processGetCampaign(apiUri, req);
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Service Campaign Error : "+e.getMessage());
+                                }
                                 break;
                             }
                             case 8: {
                                 try {
                                     service.processPostCreatePayment(apiUri, req, gson);    
                                 } catch (Exception e) {
-                                    JOptionPane.showMessageDialog(null, "API Payment Error : "+e.getMessage());
-                                }                                
+                                    JOptionPane.showMessageDialog(null, "API Serivce Payment Error : "+e.getMessage());
+                                }
                                 break;
                             }
                             case 9: {
                                 try {
-                                 service.processPostVoidPayment(apiUri, req, gson);   
+                                    service.processPostVoidPayment(apiUri, req, gson);   
                                 } catch (Exception e) {
-                                    JOptionPane.showMessageDialog(null, "API Void Payment Error : "+e.getMessage());
-                                }                                
+                                    JOptionPane.showMessageDialog(null, "API Service Void Payment Error : "+e.getMessage());
+                                }
                                 break;
                             }
                             case 10: {
-                                service.processGetServiceHealth(apiUri, req);
+                                try {
+                                    service.processGetServiceHealth(apiUri, req);
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(null, "API Service Health Error : "+e.getMessage());
+                                }
                                 break;
                             }
                         }

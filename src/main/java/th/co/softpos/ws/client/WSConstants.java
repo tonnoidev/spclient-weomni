@@ -10,7 +10,8 @@ public class WSConstants {
     public static final String URL_AUTH = "https://api.weomni-test.com/oauth/token";
     public static final String URL_PRODUCTION = "https://api.weomni.com/oauth/token";
 
-    private static final String HOST_API = "https://staging-api2.weomni-test.com";
+//    private static final String HOST_API = "https://staging-api2.weomni-test.com";
+    private static final String HOST_API = "https://api.weomni-test.com";
 
     // List all Activate API
     public static final String API_ACTIVATE = HOST_API + "/v1/terminals/activate";
