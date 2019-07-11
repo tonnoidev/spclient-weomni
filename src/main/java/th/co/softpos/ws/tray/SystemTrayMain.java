@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.Timer;
 import javax.swing.JOptionPane;
 import th.co.softpos.ws.client.POSConstant;
+import th.co.softpos.ws.controller.DBConstant;
 import th.co.softpos.ws.main.ConfigUI;
 import th.co.softpos.ws.main.SPClientUI;
 import th.co.softpos.ws.main.TaskUI;
@@ -81,6 +82,7 @@ public class SystemTrayMain {
 
         // start service task automation
         System.out.println("Start Task Schedule Jobs");
+        System.out.println("Connection db at : "+DBConstant.DRIVER);
         Timer timeTask = new Timer();
         ServicesTask serviceTask = new ServicesTask("ServiceTask");
         timeTask.scheduleAtFixedRate(serviceTask, 1000, POSConstant.SCHEDULE_TASK);
